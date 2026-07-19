@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combinaciones del Póker — Guía Visual</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/playfair-display@5.0.19/index.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.19/index.min.css">
+<style>
+  :root {
+    --felt: #0b5d3b;
+    --felt-dark: #073d26;
+    --gold: #d4af37;
+    --gold-light: #f1d26a;
+    --cream: #faf6ee;
+    --ink: #1a1a1a;
+    --red: #c0392b;
+    --black: #1c1c1c;
+    --shadow: 0 10px 30px rgba(0,0,0,.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 0;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--felt-dark), var(--felt));
+    color: var(--cream);
+    padding: 60px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px solid var(--gold);
+  }
+
+  header::before {
+    content: "♠ ♥ ♦ ♣";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20rem;
+    color: rgba(255,255,255,.04);
+    letter-spacing: 40px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 span { color: var(--gold-light); }
+
+  header p {
+    margin-top: 14px;
+    font-size: 1.05rem;
+    opacity: .9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .print-btn {
+    margin-top: 22px;
+    background: var(--gold);
+    color: var(--felt-dark);
+    border: none;
+    padding: 12px 28px;
+    font-weight: 600;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: .95rem;
+    letter-spacing: .5px;
+    transition: transform .2s, box-shadow .2s;
+    position: relative;
+    z-index: 1;
+  }
+  .print-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.3); }
+
+  main {
+    max-width: 1200px;
+    margin: -40px auto 0;
+    padding: 0 24px 60px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .intro {
+    background: white;
+    border-radius: 14px;
+    padding: 24px 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+    border-left: 5px solid var(--gold);
+  }
+  .intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    color: var(--felt-dark);
+  }
+  .intro p { color: #444; font-size: .98rem; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
+  .hand {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: transform .25s;
+    border-top: 4px solid var(--gold);
+  }
+  .hand:hover { transform: translateY(-4px); }
+
+  .hand-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .rank {
+    width: 44px;
+    height: 44px;
+    background: var(--felt);
+    color: var(--gold-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    border: 2px solid var(--gold);
+  }
+
+  .hand-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--felt-dark);
+  }
+
+  .hand-en {
+    font-size: .8rem;
+    color: #888;
+    font-style: italic;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+  }
+
+  .hand p {
+    font-size: .92rem;
+    color: #444;
+    margin-bottom: 16px;
+  }
+
+  .cards {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: auto;
+    padding-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    width: 56px;
+    height: 80px;
+    background: white;
+    border: 1.5px solid #333;
+    border-radius: 6px;
+    position: relative;
+    box-shadow: 0 3px 6px rgba(0,0,0,.15);
+    font-family: 'Playfair Display', serif;
+    transition: transform .3s;
+    flex-shrink: 0;
+  }
+  .hand:hover .card:nth-child(1) { transform: translateY(-4px); }
+  .hand:hover .card:nth-child(2) { transform: translateY(-6px); }
+  .hand:hover .card:nth-child(3) { transform: translateY(-8px); }
+  .hand:hover .card:nth-child(4) { transform: translateY(-6px); }
+  .hand:hover .card:nth-child(5) { transform: translateY(-4px); }
+
+  .card .corner {
+    position: absolute;
+    font-size: .75rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .card .corner-tl { top: 4px; left: 5px; }
+  .card .corner-br { bottom: 4px; right: 5px; transform: rotate(180deg); }
+  .card .corner .suit-small { font-size: .7rem; margin-top: 1px; }
+  .card .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8rem;
+  }
+
+  .red { color: var(--red); }
+  .black { color: var(--black); }
+
+  .prob {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed #ddd;
+    font-size: .8rem;
+    color: #777;
+    text-align: center;
+  }
+  .prob strong { color: var(--felt); }
+
+  footer {
+    background: var(--felt-dark);
+    color: var(--cream);
+    padding: 30px 24px;
+    text-align: center;
+    font-size: .9rem;
+  }
+  footer p { max-width: 800px; margin: 0 auto; opacity: .85; }
+  footer strong { color: var(--gold-light); }
+
+  /* =================== IMPRESIÓN =================== */
+  @media print {
+    @page { margin: 1.2cm; size: A4; }
+    body { background: white; }
+    header {
+      background: white !important;
+      color: var(--ink) !important;
+      padding: 20px 0;
+      border-bottom: 3px solid var(--ink);
+    }
+    header::before { display: none; }
+    header h1 span { color: var(--ink); }
+    .print-btn { display: none; }
+    main { margin-top: 20px; padding: 0; }
+    .intro { box-shadow: none; border: 1px solid #ccc; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .hand {
+      box-shadow: none;
+      border: 1px solid #ccc;
+      padding: 14px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .hand:hover { transform: none; }
+    .hand:hover .card { transform: none; }
+    .card { box-shadow: none; }
+    footer { background: white; color: var(--ink); border-top: 2px solid var(--ink); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Combinaciones del <span>Póker</span></h1>
+  <p>Guía visual con las 10 manos ordenadas de mayor a menor valor</p>
+  <button class="print-btn" onclick="window.print()">🖨️ Imprimir guía</button>
+</header>
+
+<main>
+  <div class="intro">
+    <h2>¿Cómo se ordenan las manos?</h2>
+    <p>En el póker, cada combinación tiene un valor determinado por su <strong>rareza estadística</strong>: cuanto más difícil es obtenerla, más alta es su jerarquía. A continuación encontrarás las 10 manos posibles, desde la mítica <em>Escalera Real</em> hasta la simple <em>Carta Alta</em>.</p>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <p><strong>💡 Regla de oro:</strong> Si dos jugadores tienen la misma combinación, gana quien tenga las cartas de mayor valor dentro de ella. La quinta carta auxiliar se conoce como <em>"kicker"</em> y sirve para desempatar.</p>
+</footer>
+
+<script>
+  const hands = [
+    {
+      rank: 1,
+      name: "Escalera Real",
+      en: "Royal Flush",
+      desc: "Las cinco cartas más altas (A, K, Q, J, 10) todas del mismo palo. Es la mano más alta y difícil de conseguir.",
+      cards: [
+        {v:"A", s:"♠"}, {v:"K", s:"♠"}, {v:"Q", s:"♠"}, {v:"J", s:"♠"}, {v:"10", s:"♠"}
+      ],
+      prob: "1 entre 649.740"
+    },
+    {
+      rank: 2,
+      name: "Escalera de Color",
+      en: "Straight Flush",
+      desc: "Cinco cartas consecutivas del mismo palo. Si dos jugadores la tienen, gana quien tenga la carta más alta.",
+      cards: [
+        {v:"9", s:"♥"}, {v:"8", s:"♥"}, {v:"7", s:"♥"}, {v:"6", s:"♥"}, {v:"5", s:"♥"}
+      ],
+      prob: "1 entre 72.193"
+    },
+    {
+      rank: 3,
+      name: "Póker",
+      en: "Four of a Kind",
+      desc: "Cuatro cartas del mismo valor. Si dos jugadores tienen póker, gana quien tenga el valor más alto.",
+      cards: [
+        {v:"K", s:"♠"}, {v:"K", s:"♥"}, {v:"K", s:"♦"}, {v:"K", s:"♣"}, {v:"7", s:"♠"}
+      ],
+      prob: "1 entre 4.165"
+    },
+    {
+      rank: 4,
+      name: "Full",
+      en: "Full House",
+      desc: "Un trío combinado con un par. Si hay empate, gana quien tenga el trío de mayor valor.",
+      cards: [
+        {v:"Q", s:"♠"}, {v:"Q", s:"♥"}, {v:"Q", s:"♦"}, {v:"4", s:"♣"}, {v:"4", s:"♠"}
+      ],
+      prob: "1 entre 694"
+    },
+    {
+      rank: 5,
+      name: "Color",
+      en: "Flush",
+      desc: "Cinco cartas del mismo palo, sin importar el orden. En caso de empate, gana quien tenga la carta más alta.",
+      cards: [
+        {v:"A", s:"♦"}, {v:"J", s:"♦"}, {v:"8", s:"♦"}, {v:"5", s:"♦"}, {v:"3", s:"♦"}
+      ],
+      prob: "1 entre 509"
+    },
+    {
+      rank: 6,
+      name: "Escalera",
+      en: "Straight",
+      desc: "Cinco cartas consecutivas de diferentes palos. El As puede ser la carta más alta o la más baja (A-2-3-4-5).",
+      cards: [
+        {v:"10", s:"♠"}, {v:"9", s:"♥"}, {v:"8", s:"♦"}, {v:"7", s:"♣"}, {v:"6", s:"♠"}
+      ],
+      prob: "1 entre 255"
+    },
+    {
+      rank: 7,
+      name: "Trío",
+      en: "Three of a Kind",
+      desc: "Tres cartas del mismo valor. Los desempates se resuelven con las dos cartas restantes (kickers).",
+      cards: [
+        {v:"8", s:"♠"}, {v:"8", s:"♥"}, {v:"8", s:"♦"}, {v:"K", s:"♣"}, {v:"3", s:"♠"}
+      ],
+      prob: "1 entre 47"
+    },
+    {
+      rank: 8,
+      name: "Doble Par",
+      en: "Two Pair",
+      desc: "Dos pares de cartas del mismo valor. Se desempata primero por el par mayor, luego el menor y finalmente el kicker.",
+      cards: [
+        {v:"10", s:"♠"}, {v:"10", s:"♥"}, {v:"5", s:"♦"}, {v:"5", s:"♣"}, {v:"A", s:"♠"}
+      ],
+      prob: "1 entre 21"
+    },
+    {
+      rank: 9,
+      name: "Par",
+      en: "One Pair",
+      desc: "Dos cartas del mismo valor. Es la combinación más frecuente en partidas iniciales. El kicker decide los empates.",
+      cards: [
+        {v:"A", s:"♠"}, {v:"A", s:"♥"}, {v:"K", s:"♦"}, {v:"8", s:"♣"}, {v:"3", s:"♠"}
+      ],
+      prob: "1 entre 2.4"
+    },
+    {
+      rank: 10,
+      name: "Carta Alta",
+      en: "High Card",
+      desc: "Ninguna combinación. Gana quien tenga la carta más alta. Si empatan, se comparan la segunda, tercera, etc.",
+      cards: [
+        {v:"A", s:"♠"}, {v:"J", s:"♥"}, {v:"9", s:"♦"}, {v:"6", s:"♣"}, {v:"3", s:"♠"}
+      ],
+      prob: "1 entre 2"
+    }
+  ];
+
+  const grid = document.getElementById('grid');
+
+  hands.forEach(h => {
+    const hand = document.createElement('div');
+    hand.className = 'hand';
+
+    const cardsHTML = h.cards.map(c => {
+      const isRed = c.s === '♥' || c.s === '♦';
+      const colorClass = isRed ? 'red' : 'black';
+      return `
+        <div class="card">
+          <div class="corner corner-tl ${colorClass}">
+            <span>${c.v}</span>
+            <span class="suit-small">${c.s}</span>
+          </div>
+          <div class="center ${colorClass}">${c.s}</div>
+          <div class="corner corner-br ${colorClass}">
+            <span>${c.v}</span>
+            <span class="suit-small">${c.s}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    hand.innerHTML = `
+      <div class="hand-header">
+        <div class="rank">${h.rank}</div>
+        <div>
+          <div class="hand-title">${h.name}</div>
+          <div class="hand-en">${h.en}</div>
+        </div>
+      </div>
+      <p>${h.desc}</p>
+      <div class="cards">${cardsHTML}</div>
+      <div class="prob">Probabilidad aproximada: <strong>${h.prob}</strong></div>
+    `;
+    grid.appendChild(hand);
+  });
+</script>
+
+</body>
+</html>
+

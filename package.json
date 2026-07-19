@@ -1,0 +1,22 @@
+{
+  "name": "texaspoker",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Multiplayer Texas Hold'em with React + Vite + Tailwind + WebSockets",
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail -n server,client -c green,cyan \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix server test && npm --prefix client test",
+    "test:server": "npm --prefix server test",
+    "test:client": "npm --prefix client test",
+    "test:e2e": "playwright test",
+    "test:all": "npm test && npm run test:e2e",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install && npx playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "concurrently": "^8.2.2"
+  }
+}
