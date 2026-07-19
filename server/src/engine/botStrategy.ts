@@ -1,6 +1,6 @@
-import { Card, HandName, PublicState } from "../types";
-import { RANK_VALUE } from "./deck";
-import { compareHands, evaluateHand } from "./evaluator";
+import { Card, HandName, PublicState } from "../types/index.js";
+import { RANK_VALUE } from "./deck.js";
+import { compareHands, evaluateHand } from "./evaluator.js";
 
 interface BotContext {
   me: { id: string; chips: number; bet: number; folded: boolean; allIn: boolean; holeCards: [Card, Card] };

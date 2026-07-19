@@ -1,5 +1,5 @@
-import { Card, HandName, Rank, Suit } from "../types";
-import { RANK_VALUE } from "./deck";
+import { Card, HandName, Rank, Suit } from "../types/index.js";
+import { RANK_VALUE } from "./deck.js";
 
 const HAND_RANK: Record<HandName, number> = {
   "Escalera Real": 10,

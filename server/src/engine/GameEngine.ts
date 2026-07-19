@@ -1,8 +1,8 @@
-import { buildDeck, shuffle } from "./deck";
-import { compareHands, evaluateHand } from "./evaluator";
-import { takeBotName } from "./bots";
-import { decideBotAction } from "./botStrategy";
-import { createLogger, inspect, Logger } from "../logger";
+import { buildDeck, shuffle } from "./deck.js";
+import { compareHands, evaluateHand } from "./evaluator.js";
+import { takeBotName } from "./bots.js";
+import { decideBotAction } from "./botStrategy.js";
+import { createLogger, inspect, Logger } from "../logger.js";
 import {
   Card,
   HandName,
@@ -11,7 +11,7 @@ import {
   PublicPlayer,
   PublicState,
   Street,
-} from "../types";
+} from "../types/index.js";
 
 const log = createLogger("engine");
 

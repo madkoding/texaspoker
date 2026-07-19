@@ -1,7 +1,7 @@
 import { WebSocket } from "ws";
-import { GameEngine } from "../engine/GameEngine";
-import { createLogger } from "../logger";
-import { ClientToServer, ServerToClient } from "../types";
+import { GameEngine } from "../engine/GameEngine.js";
+import { createLogger } from "../logger.js";
+import { ClientToServer, ServerToClient } from "../types/index.js";
 
 const log = createLogger("room");
 

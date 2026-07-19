@@ -1,8 +1,8 @@
 import http from "http";
 import { WebSocketServer, WebSocket } from "ws";
-import { RoomManager } from "./rooms/RoomManager";
-import { createLogger } from "./logger";
-import { ClientToServer, ServerToClient } from "./types";
+import { RoomManager } from "./rooms/RoomManager.js";
+import { createLogger } from "./logger.js";
+import { ClientToServer, ServerToClient } from "./types/index.js";
 
 const log = createLogger("ws");
 

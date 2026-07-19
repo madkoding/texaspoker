@@ -1,5 +1,5 @@
-import { Room } from "./Room";
-import { ServerToClient } from "../types";
+import { Room } from "./Room.js";
+import { ServerToClient } from "../types/index.js";
 
 export class RoomManager {
   rooms: Map<string, Room> = new Map();
