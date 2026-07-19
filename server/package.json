@@ -8,6 +8,8 @@
     "dev:watch": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
+    "railway-build": "npm run build",
+    "railway-start": "npm run start",
     "test": "vitest run",
     "test:watch": "vitest"
   },
