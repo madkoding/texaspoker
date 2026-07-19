@@ -44,7 +44,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     const isViteDev = location.port === "5173";
     const defaultUrl = isViteDev
       ? `ws://${location.hostname}:3001/ws`
-      : `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws`;
+      : "wss://texaspoker-server-production.up.railway.app/ws";
     const url = envUrl || defaultUrl;
     log.debug("ws url", { url, isViteDev });
 
