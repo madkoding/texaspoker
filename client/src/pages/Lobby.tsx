@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useGameState } from "../hooks/useGameState";
 import { createLogger } from "../logger";
 
+const NAME_KEY = "texaspoker.name";
+
 const log = createLogger("lobby");
 
 interface Props {
@@ -66,6 +68,15 @@ export function Lobby({ playerName, myId, onJoin, onCreate, onGuide }: Props) {
         </h1>
         <p className="text-cream/70 text-sm mt-2 relative z-10">
           Hola, <span className="text-gold-light font-semibold">{playerName}</span> · ID <span className="font-mono text-cream/50">{myId}</span>
+          <button
+            onClick={() => {
+              localStorage.removeItem(NAME_KEY);
+              window.location.reload();
+            }}
+            className="ml-2 text-[11px] text-cream/50 hover:text-gold-light underline underline-offset-2"
+          >
+            Cambiar nombre
+          </button>
         </p>
         <div className="mt-2 text-xs text-cream/50 relative z-10">
           {connected ? "🟢 Conectado al servidor" : "🟡 Conectando…"}
