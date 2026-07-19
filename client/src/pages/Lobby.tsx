@@ -24,6 +24,8 @@ export function Lobby({ playerName, myId, onJoin, onCreate, onGuide }: Props) {
     if (connected) {
       log.info("connected, sending list");
       send({ type: "list" });
+      const interval = setInterval(() => send({ type: "list" }), 5000);
+      return () => clearInterval(interval);
     }
   }, [connected, send]);
 

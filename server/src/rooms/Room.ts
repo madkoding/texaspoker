@@ -49,7 +49,11 @@ export class Room {
     }
     // After any state change, schedule the next bot if it's their turn.
     this.scheduleNextBot();
+    // Let lobby clients know the room list changed.
+    this.onRoomListChanged?.();
   }
+
+  onRoomListChanged?: () => void;
 
   // Send the public state plus, for any bots whose turn it is, schedule them
   // with a realistic delay so the table feels alive. Bots act one at a time,
@@ -135,9 +139,14 @@ export class Room {
   }
 
   publicInfo() {
+    // Count distinct seated humans/bots. If the hand has started, players
+    // are the authoritative list; otherwise use the seat config list.
+    const seated = this.engine.started
+      ? this.engine.players.length
+      : this.engine.seats.filter((s) => s !== null).length;
     return {
       id: this.id,
-      players: this.engine.seats.filter((s) => s !== null).length,
+      players: seated,
       maxPlayers: this.engine.seats.length,
       started: this.engine.started,
     };

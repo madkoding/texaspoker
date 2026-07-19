@@ -34,6 +34,15 @@ interface ClientCtx {
 const clients = new Map<WebSocket, ClientCtx>();
 const byClientId = new Map<string, WebSocket>();
 
+function broadcastRoomsList() {
+  const rooms = manager.list();
+  for (const [socket, ctx] of clients.entries()) {
+    if (!ctx.roomId && socket.readyState === WebSocket.OPEN) {
+      send(socket, { type: "rooms", rooms });
+    }
+  }
+}
+
 function send(socket: WebSocket, msg: ServerToClient) {
   if (socket.readyState === WebSocket.OPEN) {
     try {
@@ -109,6 +118,7 @@ wss.on("connection", (socket) => {
     if (msg.type === "create") {
       const room = manager.create();
       ctx.roomId = room.id;
+      room.onRoomListChanged = broadcastRoomsList;
       room.joinRoom({ id: playerId, name, socket, roomId: room.id }, name);
       return;
     }
@@ -121,6 +131,7 @@ wss.on("connection", (socket) => {
         return;
       }
       ctx.roomId = room.id;
+      room.onRoomListChanged = broadcastRoomsList;
       room.joinRoom({ id: playerId, name, socket, roomId: room.id }, name);
       return;
     }
