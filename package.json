@@ -17,7 +17,7 @@
     "install:all": "npm install && npm --prefix server install && npm --prefix client install && npx playwright install chromium"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.64.0",
     "concurrently": "^8.2.2"
   }
 }
