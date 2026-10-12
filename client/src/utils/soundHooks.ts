@@ -55,7 +55,11 @@ export function useStateSounds(state: PublicState | null) {
     }
 
     // Winner announced
-    if (state.street === "showdown" && state.winners && state.winners.length > 0) {
+    if (
+      state.street === "showdown" &&
+      state.winners &&
+      state.winners.length > 0
+    ) {
       const prevHadWinners = prev.winners && prev.winners.length > 0;
       if (!prevHadWinners) sfx.win();
     }

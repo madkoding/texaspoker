@@ -1,6 +1,6 @@
 export type Suit = "♠" | "♥" | "♦" | "♣";
 export type Rank =
-  | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K" | "A";
+  "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "10" | "J" | "Q" | "K" | "A";
 
 export interface Card {
   rank: Rank;
@@ -19,7 +19,8 @@ export type HandName =
   | "Par"
   | "Carta Alta";
 
-export type Street = "preflop" | "flop" | "turn" | "river" | "showdown" | "waiting";
+export type Street =
+  "preflop" | "flop" | "turn" | "river" | "showdown" | "waiting";
 
 export type ActionType = "fold" | "check" | "call" | "bet" | "raise" | "all-in";
 
@@ -57,7 +58,13 @@ export interface PublicState {
   bigBlind: number;
   players: PublicPlayer[];
   communityCardsRevealed: number;
-  winners?: { id: string; name: string; hand: HandName; amount: number; cards: [Card, Card] }[];
+  winners?: {
+    id: string;
+    name: string;
+    hand: HandName;
+    amount: number;
+    cards: [Card, Card];
+  }[];
   log: LogEntry[];
   started: boolean;
   handNumber: number;
@@ -71,7 +78,18 @@ export interface LogEntry {
 }
 
 export interface ClientToServer {
-  type: "join" | "leave" | "create" | "list" | "ready" | "start" | "action" | "sitOut" | "rebuy" | "next" | "add-bots";
+  type:
+    | "join"
+    | "leave"
+    | "create"
+    | "list"
+    | "ready"
+    | "start"
+    | "action"
+    | "sitOut"
+    | "rebuy"
+    | "next"
+    | "add-bots";
   roomId?: string;
   name?: string;
   action?: ActionType;
@@ -84,7 +102,12 @@ export interface ClientToServer {
 export interface ServerToClient {
   type: "state" | "error" | "rooms" | "hand-result" | "system" | "bot-thinking";
   state?: PublicState;
-  rooms?: { id: string; players: number; maxPlayers: number; started: boolean }[];
+  rooms?: {
+    id: string;
+    players: number;
+    maxPlayers: number;
+    started: boolean;
+  }[];
   message?: string;
   you?: { id: string; hand: HandName; cards: [Card, Card] } | null;
   error?: string;

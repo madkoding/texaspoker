@@ -8,14 +8,18 @@ const log = createLogger("app");
 type You = NonNullable<ServerToClient["you"]>;
 
 export function useGameState() {
-  const { connected, send, subscribe, lastError, clientId } = useSocketContext();
+  const { connected, send, subscribe, lastError, clientId } =
+    useSocketContext();
   const [state, setState] = useState<PublicState | null>(null);
   const [myHand, setMyHand] = useState<You | null>(null);
   const [rooms, setRooms] = useState<ServerToClient["rooms"]>([]);
   const [systemMsg, setSystemMsg] = useState<string | null>(null);
   // Bot currently "thinking" — the server emits bot-thinking before the
   // bot's action lands so the client can highlight them.
-  const [thinkingBot, setThinkingBot] = useState<{ id: string; name: string } | null>(null);
+  const [thinkingBot, setThinkingBot] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const lastStateRef = useRef<PublicState | null>(null);
   const thinkingTimerRef = useRef<number | null>(null);
 
@@ -26,15 +30,39 @@ export function useGameState() {
         const prev = lastStateRef.current;
         const next = msg.state ?? null;
         // log only meaningful changes to avoid spam
-        if (!prev || !next ||
-            prev.street !== next.street ||
-            prev.started !== next.started ||
-            prev.pot !== next.pot ||
-            prev.handNumber !== next.handNumber ||
-            prev.players.length !== next.players.length) {
-          log.info("state change", next ? { roomId: next.roomId, street: next.street, started: next.started, pot: next.pot, players: next.players.length, hand: next.handNumber } : null);
+        if (
+          !prev ||
+          !next ||
+          prev.street !== next.street ||
+          prev.started !== next.started ||
+          prev.pot !== next.pot ||
+          prev.handNumber !== next.handNumber ||
+          prev.players.length !== next.players.length
+        ) {
+          log.info(
+            "state change",
+            next
+              ? {
+                  roomId: next.roomId,
+                  street: next.street,
+                  started: next.started,
+                  pot: next.pot,
+                  players: next.players.length,
+                  hand: next.handNumber,
+                }
+              : null,
+          );
         } else {
-          log.debug("state tick", next ? { street: next.street, pot: next.pot, players: next.players.length } : null);
+          log.debug(
+            "state tick",
+            next
+              ? {
+                  street: next.street,
+                  pot: next.pot,
+                  players: next.players.length,
+                }
+              : null,
+          );
         }
         lastStateRef.current = next;
         setState(next);
@@ -48,8 +76,12 @@ export function useGameState() {
       } else if (msg.type === "bot-thinking") {
         if (msg.id && msg.name) {
           setThinkingBot({ id: msg.id, name: msg.name });
-          if (thinkingTimerRef.current != null) clearTimeout(thinkingTimerRef.current);
-          thinkingTimerRef.current = window.setTimeout(() => setThinkingBot(null), 3000);
+          if (thinkingTimerRef.current != null)
+            clearTimeout(thinkingTimerRef.current);
+          thinkingTimerRef.current = window.setTimeout(
+            () => setThinkingBot(null),
+            3000,
+          );
         }
       }
     });

@@ -33,7 +33,20 @@ function makeState(overrides: Partial<PublicState> = {}): PublicState {
     dealer: 0,
     smallBlind: 5,
     bigBlind: 10,
-    players: [basePlayer, { ...basePlayer, id: "p2", name: "P2", chips: 990, isDealer: false, isSmallBlind: false, isBigBlind: true, isTurn: false, bet: 10 }],
+    players: [
+      basePlayer,
+      {
+        ...basePlayer,
+        id: "p2",
+        name: "P2",
+        chips: 990,
+        isDealer: false,
+        isSmallBlind: false,
+        isBigBlind: true,
+        isTurn: false,
+        bet: 10,
+      },
+    ],
     communityCardsRevealed: 0,
     log: [],
     started: true,
@@ -53,8 +66,12 @@ describe("ActionPanel", () => {
   it("shows fold/check/call/all-in buttons when it's my turn", () => {
     const onAction = vi.fn();
     render(<ActionPanel state={makeState()} myId="p1" onAction={onAction} />);
-    expect(screen.getByRole("button", { name: /Retirarse/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Igualar/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Retirarse/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Igualar/i }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /All-in/i })).toBeInTheDocument();
   });
 
@@ -82,7 +99,15 @@ describe("ActionPanel", () => {
         { rank: "J", suit: "♣" },
         { rank: "10", suit: "♠" },
       ],
-      winners: [{ id: "p1", name: "P1", hand: "Escalera Real", amount: 100, cards: basePlayer.holeCards! }],
+      winners: [
+        {
+          id: "p1",
+          name: "P1",
+          hand: "Escalera Real",
+          amount: 100,
+          cards: basePlayer.holeCards!,
+        },
+      ],
     });
     render(<ActionPanel state={state} myId="p1" onAction={vi.fn()} />);
     expect(screen.getByText(/Escalera Real/i)).toBeInTheDocument();
@@ -96,14 +121,25 @@ describe("ActionPanel", () => {
       players: [basePlayer],
     });
     render(<ActionPanel state={state} myId="p1" onAction={vi.fn()} />);
-    expect(screen.getByText(/Esperando que se reparta la siguiente mano/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Esperando que se reparta la siguiente mano/i),
+    ).toBeInTheDocument();
   });
 
   it("disables 'not your turn' state and shows the active player", () => {
     const state = makeState({
       players: [
         { ...basePlayer, isTurn: false, isDealer: true, isSmallBlind: true },
-        { ...basePlayer, id: "p2", name: "P2", isTurn: true, isDealer: false, isSmallBlind: false, isBigBlind: true, bet: 10 },
+        {
+          ...basePlayer,
+          id: "p2",
+          name: "P2",
+          isTurn: true,
+          isDealer: false,
+          isSmallBlind: false,
+          isBigBlind: true,
+          bet: 10,
+        },
       ],
     });
     render(<ActionPanel state={state} myId="p1" onAction={vi.fn()} />);
@@ -115,7 +151,15 @@ describe("ActionPanel", () => {
     const state = makeState({
       players: [
         { ...basePlayer, chips: 0, allIn: true, isTurn: false },
-        { ...basePlayer, id: "p2", chips: 990, isTurn: true, isDealer: false, isSmallBlind: false, isBigBlind: true },
+        {
+          ...basePlayer,
+          id: "p2",
+          chips: 990,
+          isTurn: true,
+          isDealer: false,
+          isSmallBlind: false,
+          isBigBlind: true,
+        },
       ],
     });
     render(<ActionPanel state={state} myId="p1" onAction={vi.fn()} />);

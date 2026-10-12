@@ -22,7 +22,8 @@ let muted = false;
 function getCtx(): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (ctx) return ctx;
-  const Ctx = (window.AudioContext || (window as any).webkitAudioContext) as typeof AudioContext | undefined;
+  const Ctx = (window.AudioContext || (window as any).webkitAudioContext) as
+    typeof AudioContext | undefined;
   if (!Ctx) return null;
   ctx = new Ctx();
   return ctx;
@@ -75,9 +76,14 @@ function noise(durationMs: number, peak = 0.12, lowpass = 4000) {
   const c = getCtx();
   if (!c) return;
   const t0 = c.currentTime;
-  const buf = c.createBuffer(1, Math.floor(c.sampleRate * (durationMs / 1000)), c.sampleRate);
+  const buf = c.createBuffer(
+    1,
+    Math.floor(c.sampleRate * (durationMs / 1000)),
+    c.sampleRate,
+  );
   const data = buf.getChannelData(0);
-  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+  for (let i = 0; i < data.length; i++)
+    data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
   const src = c.createBufferSource();
   src.buffer = buf;
   const filter = c.createBiquadFilter();
@@ -100,16 +106,16 @@ export const sfx = {
   chip() {
     if (muted) return;
     tone(1800, 90, "triangle", 0.16, 0.001);
-    tone(2400, 60, "sine", 0.10, 0.001);
+    tone(2400, 60, "sine", 0.1, 0.001);
   },
   bet() {
     if (muted) return;
     tone(220, 180, "square", 0.18, 0.005);
-    tone(140, 220, "sine", 0.10, 0.005);
+    tone(140, 220, "sine", 0.1, 0.005);
   },
   raise() {
     if (muted) return;
-    tone(330, 100, "square", 0.20, 0.005);
+    tone(330, 100, "square", 0.2, 0.005);
     tone(220, 180, "sine", 0.12, 0.005);
     tone(440, 200, "triangle", 0.08, 0.005);
   },
@@ -139,7 +145,7 @@ export const sfx = {
   },
   check() {
     if (muted) return;
-    tone(660, 60, "sine", 0.10, 0.005);
+    tone(660, 60, "sine", 0.1, 0.005);
   },
   sweep() {
     if (muted) return;
@@ -163,7 +169,7 @@ export const sfx = {
   },
   warning() {
     if (muted) return;
-    tone(880, 80, "square", 0.10, 0.001);
+    tone(880, 80, "square", 0.1, 0.001);
   },
 };
 

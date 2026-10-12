@@ -1,9 +1,14 @@
 import { CSSProperties } from "react";
 
-export type ChipColor = "red" | "blue" | "green" | "yellow" | "purple" | "black" | "gold";
+export type ChipColor =
+  "red" | "blue" | "green" | "yellow" | "purple" | "black" | "gold";
 
 /** Standard poker chip denominations with their assigned colors. */
-export const DENOMINATIONS: { value: number; color: ChipColor; label: string }[] = [
+export const DENOMINATIONS: {
+  value: number;
+  color: ChipColor;
+  label: string;
+}[] = [
   { value: 10000, color: "gold", label: "10K" },
   { value: 5000, color: "purple", label: "5K" },
   { value: 1000, color: "black", label: "1K" },
@@ -29,7 +34,9 @@ export function abbreviate(value: number): string {
 }
 
 /** Break a chip amount into standard denominations (largest first). */
-export function breakIntoDenominations(amount: number): { value: number; color: ChipColor; count: number }[] {
+export function breakIntoDenominations(
+  amount: number,
+): { value: number; color: ChipColor; count: number }[] {
   if (amount <= 0) return [];
   const result: { value: number; color: ChipColor; count: number }[] = [];
   let remaining = amount;
@@ -52,14 +59,17 @@ interface PokerChipProps {
   style?: CSSProperties;
 }
 
-const PALETTE: Record<ChipColor, { face: string; edge: string; rim: string; text: string }> = {
-  red:    { face: "#c0392b", edge: "#7a1f17", rim: "#f5e7c8", text: "#fff8e7" },
-  blue:   { face: "#2c3e50", edge: "#16202b", rim: "#f5e7c8", text: "#fff8e7" },
-  green:  { face: "#16a085", edge: "#0e6b59", rim: "#f5e7c8", text: "#fff8e7" },
+const PALETTE: Record<
+  ChipColor,
+  { face: string; edge: string; rim: string; text: string }
+> = {
+  red: { face: "#c0392b", edge: "#7a1f17", rim: "#f5e7c8", text: "#fff8e7" },
+  blue: { face: "#2c3e50", edge: "#16202b", rim: "#f5e7c8", text: "#fff8e7" },
+  green: { face: "#16a085", edge: "#0e6b59", rim: "#f5e7c8", text: "#fff8e7" },
   yellow: { face: "#d4af37", edge: "#8a731f", rim: "#f5e7c8", text: "#3b2a08" },
   purple: { face: "#8e44ad", edge: "#5a2c6e", rim: "#f5e7c8", text: "#fff8e7" },
-  black:  { face: "#1a1a1a", edge: "#0a0a0a", rim: "#f5e7c8", text: "#fff8e7" },
-  gold:   { face: "#e8c252", edge: "#8a6a18", rim: "#fff8e7", text: "#3b2a08" },
+  black: { face: "#1a1a1a", edge: "#0a0a0a", rim: "#f5e7c8", text: "#fff8e7" },
+  gold: { face: "#e8c252", edge: "#8a6a18", rim: "#fff8e7", text: "#3b2a08" },
 };
 
 const DASH_PATTERN = `repeating-conic-gradient(from 0deg, #f5e7c8 0deg 4deg, transparent 4deg 12deg)`;
@@ -131,13 +141,26 @@ interface ChipStackProps {
   style?: CSSProperties;
 }
 
-const CHIP_COLOR_CYCLE: ChipColor[] = ["red", "blue", "green", "yellow", "purple", "black"];
+const CHIP_COLOR_CYCLE: ChipColor[] = [
+  "red",
+  "blue",
+  "green",
+  "yellow",
+  "purple",
+  "black",
+];
 
 /**
  * Stack of chips proportional to a value. The "thickness" of the stack
  * (number of discs) is capped so we always look like a tidy stack.
  */
-export function ChipStack({ amount, maxChips = 5, size = 24, className = "", style }: ChipStackProps) {
+export function ChipStack({
+  amount,
+  maxChips = 5,
+  size = 24,
+  className = "",
+  style,
+}: ChipStackProps) {
   if (amount <= 0) return null;
   const denoms = breakIntoDenominations(amount);
   // Determine how many discs to render: one per meaningful chunk, capped.
@@ -161,7 +184,11 @@ export function ChipStack({ amount, maxChips = 5, size = 24, className = "", sty
           zIndex: count - i,
         }}
       >
-        <PokerChip color={color} size={size} value={isCenter ? amount : undefined} />
+        <PokerChip
+          color={color}
+          size={size}
+          value={isCenter ? amount : undefined}
+        />
       </div>
     );
   });
@@ -187,12 +214,20 @@ interface BetChipStackProps {
 }
 
 /** A short stack (1-2 chips) for in-flight bets on the felt. */
-export function BetChipStack({ amount, size = 20, className = "", animateFrom }: BetChipStackProps) {
+export function BetChipStack({
+  amount,
+  size = 20,
+  className = "",
+  animateFrom,
+}: BetChipStackProps) {
   if (amount <= 0) return null;
   const count = Math.min(2, Math.max(1, Math.ceil(amount / 200)));
   const color = amount >= 200 ? "purple" : amount >= 50 ? "green" : "red";
   return (
-    <div className={`flex flex-col items-center ${className}`} style={{ height: size + (count - 1) * size * 0.4 }}>
+    <div
+      className={`flex flex-col items-center ${className}`}
+      style={{ height: size + (count - 1) * size * 0.4 }}
+    >
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
@@ -202,11 +237,17 @@ export function BetChipStack({ amount, size = 20, className = "", animateFrom }:
             height: size,
             marginTop: i === 0 ? 0 : -size * 0.6,
             zIndex: count - i,
-            transform: animateFrom ? `translate(${animateFrom.x}px, ${animateFrom.y}px)` : undefined,
+            transform: animateFrom
+              ? `translate(${animateFrom.x}px, ${animateFrom.y}px)`
+              : undefined,
             animationDelay: animateFrom ? `${i * 80}ms` : undefined,
           }}
         >
-          <PokerChip color={color} size={size} value={i === 0 ? amount : undefined} />
+          <PokerChip
+            color={color}
+            size={size}
+            value={i === 0 ? amount : undefined}
+          />
         </div>
       ))}
     </div>

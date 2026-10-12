@@ -61,10 +61,16 @@ export function ActionStamps({ state, myId }: Props) {
           raise: ["sube a"],
           "all-in": ["va con todo"],
         };
-        const match = verbsEs[verb].find((v) => entry.message.toLowerCase().includes(v));
+        const match = verbsEs[verb].find((v) =>
+          entry.message.toLowerCase().includes(v),
+        );
         if (match) {
           // Skip "se ha sentado", "se ha unido", etc. (those include "se" but not the verbs)
-          if (entry.message.includes("se ha sentado") || entry.message.includes("se ha unido")) continue;
+          if (
+            entry.message.includes("se ha sentado") ||
+            entry.message.includes("se ha unido")
+          )
+            continue;
           // Extract player name (the first word)
           const playerName = entry.message.split(" ")[0];
           // Extract amount if any (trailing number)
@@ -84,7 +90,9 @@ export function ActionStamps({ state, myId }: Props) {
       setStamps((s) => [...newStamps, ...s].slice(0, 3));
       // Auto-remove after 1.2s
       setTimeout(() => {
-        setStamps((s) => s.filter((st) => !newStamps.find((n) => n.id === st.id)));
+        setStamps((s) =>
+          s.filter((st) => !newStamps.find((n) => n.id === st.id)),
+        );
       }, 1300);
     }
     setSeen(len);

@@ -30,7 +30,12 @@ export function LogPanel({ log }: Props) {
             <div className="text-[10px] uppercase tracking-widest text-ink/50">
               Registro ({log.length})
             </div>
-            <button onClick={() => setOpen(false)} className="text-ink/50 hover:text-ink text-sm">×</button>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-ink/50 hover:text-ink text-sm"
+            >
+              ×
+            </button>
           </div>
           <ul className="overflow-y-auto text-[11px] space-y-0.5 pr-1 max-h-[50vh]">
             {log.length === 0 ? (
@@ -43,8 +48,8 @@ export function LogPanel({ log }: Props) {
                     l.kind === "win"
                       ? "text-gold-dark font-semibold"
                       : l.kind === "system"
-                      ? "text-ink/40"
-                      : "text-ink/70"
+                        ? "text-ink/40"
+                        : "text-ink/70"
                   }`}
                 >
                   <span className="text-ink/30 mr-1">·</span>

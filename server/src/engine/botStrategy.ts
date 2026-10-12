@@ -3,7 +3,14 @@ import { RANK_VALUE } from "./deck.js";
 import { compareHands, evaluateHand } from "./evaluator.js";
 
 interface BotContext {
-  me: { id: string; chips: number; bet: number; folded: boolean; allIn: boolean; holeCards: [Card, Card] };
+  me: {
+    id: string;
+    chips: number;
+    bet: number;
+    folded: boolean;
+    allIn: boolean;
+    holeCards: [Card, Card];
+  };
   state: PublicState;
   // The 5 community cards we know about (state.community)
   community: Card[];
@@ -36,7 +43,12 @@ export function decideBotAction(ctx: BotContext): {
   }
 
   // All-in call: very short stack, decent hand
-  if (toCall > 0 && me.chips <= state.bigBlind * 5 && me.chips >= toCall && handRank >= 2) {
+  if (
+    toCall > 0 &&
+    me.chips <= state.bigBlind * 5 &&
+    me.chips >= toCall &&
+    handRank >= 2
+  ) {
     return { type: "all-in" };
   }
 
@@ -44,11 +56,17 @@ export function decideBotAction(ctx: BotContext): {
   // raise doesn't immediately commit us to all-in)
   if (handRank >= 4 && me.chips > state.bigBlind * 10) {
     if (canCheck && me.chips > 0) {
-      const amt = Math.min(me.chips, Math.max(state.bigBlind * 3, state.pot / 2));
+      const amt = Math.min(
+        me.chips,
+        Math.max(state.bigBlind * 3, state.pot / 2),
+      );
       return { type: state.currentBet === 0 ? "bet" : "raise", amount: amt };
     }
     if (toCall > 0 && me.chips > 0) {
-      const amt = Math.min(me.chips, state.currentBet + Math.max(state.minRaise, state.bigBlind));
+      const amt = Math.min(
+        me.chips,
+        state.currentBet + Math.max(state.minRaise, state.bigBlind),
+      );
       return { type: "raise", amount: amt };
     }
   }
@@ -62,7 +80,8 @@ export function decideBotAction(ctx: BotContext): {
 
   // Weak hand: cheap calls, fold to big bets
   if (toCall === 0) return { type: "check" };
-  if (toCall <= state.bigBlind * 2 && me.chips >= toCall) return { type: "call" };
+  if (toCall <= state.bigBlind * 2 && me.chips >= toCall)
+    return { type: "call" };
   if (toCall <= me.chips / 10 && me.chips >= toCall) return { type: "call" };
   if (toCall > me.chips) {
     // all-in for less than call

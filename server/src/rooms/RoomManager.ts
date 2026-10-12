@@ -23,7 +23,14 @@ export class RoomManager {
     this.rooms.delete(id);
   }
 
-  broadcastRooms(roomsList: { id: string; players: number; maxPlayers: number; started: boolean }[]) {
+  broadcastRooms(
+    roomsList: {
+      id: string;
+      players: number;
+      maxPlayers: number;
+      started: boolean;
+    }[],
+  ) {
     // broadcast to clients in lobby; the client decides
   }
 }

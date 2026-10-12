@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { GameEngine } from "./GameEngine";
 
-function makeEngine(opts: { smallBlind?: number; bigBlind?: number; maxPlayers?: number } = {}) {
+function makeEngine(
+  opts: { smallBlind?: number; bigBlind?: number; maxPlayers?: number } = {},
+) {
   const e = new GameEngine("TEST", {
     smallBlind: opts.smallBlind ?? 5,
     bigBlind: opts.bigBlind ?? 10,
@@ -25,7 +27,9 @@ function startHand2(e: GameEngine) {
 
 describe("GameEngine.addPlayer", () => {
   let e: GameEngine;
-  beforeEach(() => { e = makeEngine(); });
+  beforeEach(() => {
+    e = makeEngine();
+  });
 
   it("fills empty seats in order", () => {
     seat(e, "p1", "P1");

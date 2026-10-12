@@ -20,7 +20,11 @@ export class Room {
 
   constructor(id: string) {
     this.id = id;
-    this.engine = new GameEngine(id, { smallBlind: 5, bigBlind: 10, startingChips: 1000 });
+    this.engine = new GameEngine(id, {
+      smallBlind: 5,
+      bigBlind: 10,
+      startingChips: 1000,
+    });
     this.engine.resetSeats(7);
     // When the engine asks for a bot to be announced as "thinking", the room
     // can fan out a transient message to clients.
@@ -60,7 +64,8 @@ export class Room {
   // separated by ~1.2-2.2s of "thinking" so the human can read each action.
   scheduleNextBot() {
     if (!this.engine.started) return;
-    if (this.engine.street === "showdown" || this.engine.street === "waiting") return;
+    if (this.engine.street === "showdown" || this.engine.street === "waiting")
+      return;
     const p = this.engine.players[this.engine.toAct];
     if (!p || !p.id.startsWith("bot-")) return;
     if (p.folded || p.allIn) return;
@@ -81,7 +86,11 @@ export class Room {
   }
 
   handle(client: Client, msg: ClientToServer) {
-    log.debug("handle", { type: msg.type, clientId: client.id, roomId: this.id });
+    log.debug("handle", {
+      type: msg.type,
+      clientId: client.id,
+      roomId: this.id,
+    });
     if (msg.type === "join" && msg.roomId) {
       this.joinRoom(client, msg.name ?? "Anónimo");
       return;
@@ -99,7 +108,10 @@ export class Room {
     if (msg.type === "action" && msg.action) {
       const res = this.engine.applyAction(client.id, msg.action, msg.amount);
       if (!res.ok) {
-        log.debug("action rejected", { clientId: client.id, reason: res.reason });
+        log.debug("action rejected", {
+          clientId: client.id,
+          reason: res.reason,
+        });
         this.send(client, { type: "error", error: res.reason });
       } else {
         this.broadcast();
@@ -130,7 +142,10 @@ export class Room {
     client.roomId = this.id;
     const res = this.engine.addPlayer(client.id, name);
     if (!res.ok) {
-      log.warn("joinRoom rejected", { clientId: client.id, reason: res.reason });
+      log.warn("joinRoom rejected", {
+        clientId: client.id,
+        reason: res.reason,
+      });
       this.send(client, { type: "error", error: res.reason });
       return;
     }

@@ -18,7 +18,14 @@ const sizeMap = {
   lg: { box: "w-[96px] h-[136px]", rank: "text-base", center: "text-5xl" },
 };
 
-export function Card({ card, faceDown, size = "md", highlight, deal, dealIndex = 0 }: CardProps) {
+export function Card({
+  card,
+  faceDown,
+  size = "md",
+  highlight,
+  deal,
+  dealIndex = 0,
+}: CardProps) {
   const sz = sizeMap[size];
   const dealStyle = deal
     ? { animationDelay: `${dealIndex * 120}ms` }
@@ -33,7 +40,9 @@ export function Card({ card, faceDown, size = "md", highlight, deal, dealIndex =
       >
         <div className="absolute inset-1 rounded-lg border border-gold/50 flex items-center justify-center bg-[radial-gradient(circle_at_35%_30%,_rgba(255,255,255,0.08),_transparent_60%)]">
           <div className="w-[70%] h-[70%] rounded-md border border-gold/25 flex items-center justify-center bg-felt-dark/40">
-            <span className="text-gold/80 text-2xl font-display drop-shadow">♠</span>
+            <span className="text-gold/80 text-2xl font-display drop-shadow">
+              ♠
+            </span>
           </div>
         </div>
       </div>
@@ -48,12 +57,20 @@ export function Card({ card, faceDown, size = "md", highlight, deal, dealIndex =
       } transition-transform hover:-translate-y-0.5`}
       style={dealStyle}
     >
-      <div className={`absolute top-1.5 left-1.5 flex flex-col items-center leading-none ${color} ${sz.rank}`}>
+      <div
+        className={`absolute top-1.5 left-1.5 flex flex-col items-center leading-none ${color} ${sz.rank}`}
+      >
         <span>{card.rank}</span>
         <span className="text-[0.85em] mt-0.5">{card.suit}</span>
       </div>
-      <div className={`absolute inset-0 flex items-center justify-center ${sz.center} ${color}`}>{card.suit}</div>
-      <div className={`absolute bottom-1.5 right-1.5 flex flex-col items-center leading-none rotate-180 ${color} ${sz.rank}`}>
+      <div
+        className={`absolute inset-0 flex items-center justify-center ${sz.center} ${color}`}
+      >
+        {card.suit}
+      </div>
+      <div
+        className={`absolute bottom-1.5 right-1.5 flex flex-col items-center leading-none rotate-180 ${color} ${sz.rank}`}
+      >
         <span>{card.rank}</span>
         <span className="text-[0.85em] mt-0.5">{card.suit}</span>
       </div>

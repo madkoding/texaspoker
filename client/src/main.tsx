@@ -9,5 +9,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <SocketProvider>
       <App />
     </SocketProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

@@ -69,7 +69,9 @@ export function Lobby({ playerName, myId, onJoin, onCreate, onGuide }: Props) {
           Texas <span className="text-gold-light">Poker</span>
         </h1>
         <p className="text-cream/70 text-sm mt-2 relative z-10">
-          Hola, <span className="text-gold-light font-semibold">{playerName}</span> · ID <span className="font-mono text-cream/50">{myId}</span>
+          Hola,{" "}
+          <span className="text-gold-light font-semibold">{playerName}</span> ·
+          ID <span className="font-mono text-cream/50">{myId}</span>
           <button
             onClick={() => {
               localStorage.removeItem(NAME_KEY);
@@ -91,9 +93,12 @@ export function Lobby({ playerName, myId, onJoin, onCreate, onGuide }: Props) {
           <div className="flex items-start gap-3 mb-2">
             <span className="text-2xl">🤖</span>
             <div>
-              <h2 className="font-display text-2xl text-felt-dark">Jugar solo</h2>
+              <h2 className="font-display text-2xl text-felt-dark">
+                Jugar solo
+              </h2>
               <p className="text-sm text-ink/70">
-                Empieza una partida tú solo contra 8 bots. Tú actúas, los bots responden.
+                Empieza una partida tú solo contra 8 bots. Tú actúas, los bots
+                responden.
               </p>
             </div>
           </div>
@@ -124,9 +129,12 @@ export function Lobby({ playerName, myId, onJoin, onCreate, onGuide }: Props) {
           <div className="flex items-start gap-3 mb-2">
             <span className="text-2xl">👥</span>
             <div className="flex-1">
-              <h2 className="font-display text-xl text-felt-dark mb-1">Crear sala multiplayer</h2>
+              <h2 className="font-display text-xl text-felt-dark mb-1">
+                Crear sala multiplayer
+              </h2>
               <p className="text-sm text-ink/60">
-                Hasta 7 jugadores · Apuesta inicial 5/10 · 1000 fichas por jugador
+                Hasta 7 jugadores · Apuesta inicial 5/10 · 1000 fichas por
+                jugador
               </p>
             </div>
           </div>
@@ -150,7 +158,9 @@ export function Lobby({ playerName, myId, onJoin, onCreate, onGuide }: Props) {
         <section className="card-white p-6">
           <div className="flex items-start gap-3 mb-3">
             <span className="text-2xl">🔑</span>
-            <h2 className="font-display text-xl text-felt-dark">Unirse por código</h2>
+            <h2 className="font-display text-xl text-felt-dark">
+              Unirse por código
+            </h2>
           </div>
           <div className="flex gap-2">
             <input
@@ -173,12 +183,17 @@ export function Lobby({ playerName, myId, onJoin, onCreate, onGuide }: Props) {
         <section className="card-white p-6">
           <div className="flex items-start gap-3 mb-3">
             <span className="text-2xl">🌐</span>
-            <h2 className="font-display text-xl text-felt-dark">Salas activas</h2>
+            <h2 className="font-display text-xl text-felt-dark">
+              Salas activas
+            </h2>
           </div>
           {rooms && rooms.length > 0 ? (
             <ul className="divide-y divide-black/10">
               {rooms.map((r) => (
-                <li key={r.id} className="flex items-center justify-between py-3">
+                <li
+                  key={r.id}
+                  className="flex items-center justify-between py-3"
+                >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-felt/10 flex items-center justify-center font-display text-felt-dark font-bold border border-felt/20">
                       {r.id.slice(0, 1)}
@@ -186,7 +201,8 @@ export function Lobby({ playerName, myId, onJoin, onCreate, onGuide }: Props) {
                     <div>
                       <div className="font-display text-felt-dark">{r.id}</div>
                       <div className="text-xs text-ink/60">
-                        {r.players}/{r.maxPlayers} jugadores {r.started ? "· en juego" : "· en lobby"}
+                        {r.players}/{r.maxPlayers} jugadores{" "}
+                        {r.started ? "· en juego" : "· en lobby"}
                       </div>
                     </div>
                   </div>

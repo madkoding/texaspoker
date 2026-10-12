@@ -49,7 +49,15 @@ interface SeatPos {
 const TABLE_ASPECT = 10 / 16; // h/w for 16:10
 const seatPositions = (n: number) => {
   if (n <= 1) {
-    return [{ top: "72%", left: "50%", angle: Math.PI / 2, isTop: false, isSide: false }];
+    return [
+      {
+        top: "72%",
+        left: "50%",
+        angle: Math.PI / 2,
+        isTop: false,
+        isSide: false,
+      },
+    ];
   }
   const positions: SeatPos[] = [];
   const cx = 50;
@@ -61,8 +69,8 @@ const seatPositions = (n: number) => {
   // used for placement, then use `isSide` to shift side-seat content inward.
   // Use different radii for x and y: less vertical pull so seats on the
   // bottom arc don't clip outside the felt.
-  const insetX = n <= 2 ? 0.78 : n <= 4 ? 0.74 : n <= 6 ? 0.70 : 0.66;
-  const insetY = n <= 2 ? 0.70 : n <= 4 ? 0.66 : n <= 6 ? 0.62 : 0.58;
+  const insetX = n <= 2 ? 0.78 : n <= 4 ? 0.74 : n <= 6 ? 0.7 : 0.66;
+  const insetY = n <= 2 ? 0.7 : n <= 4 ? 0.66 : n <= 6 ? 0.62 : 0.58;
   const rx = 50 * insetX;
   const ry = 50 * TABLE_ASPECT * insetY;
   const cy = 46; // shift whole arc upward ~20px at design size
@@ -118,7 +126,13 @@ export function PokerTable({ state, myId, thinkingBot = null }: Props) {
   const streetLabel =
     state.street === "waiting"
       ? "Esperando"
-      : { preflop: "Preflop", flop: "Flop", turn: "Turn", river: "River", showdown: "Showdown" }[state.street];
+      : {
+          preflop: "Preflop",
+          flop: "Flop",
+          turn: "Turn",
+          river: "River",
+          showdown: "Showdown",
+        }[state.street];
 
   return (
     <div className="relative w-full h-full rounded-[50%] felt-pattern overflow-hidden">
@@ -135,7 +149,16 @@ export function PokerTable({ state, myId, thinkingBot = null }: Props) {
         <div className="flex gap-2">
           {Array.from({ length: 5 }).map((_, i) => {
             const c = state.community[i];
-            return <Card key={i} card={c} faceDown={!c} size="sm" deal dealIndex={i} />;
+            return (
+              <Card
+                key={i}
+                card={c}
+                faceDown={!c}
+                size="sm"
+                deal
+                dealIndex={i}
+              />
+            );
           })}
         </div>
       </div>
@@ -156,7 +179,10 @@ export function PokerTable({ state, myId, thinkingBot = null }: Props) {
         const offset = meIdx >= 0 ? meIdx : 0;
         const posIndex = (i - offset + seats.length) % seats.length;
         const pos = positions[posIndex] ?? positions[0];
-        const winner = state.street === "showdown" ? winners.find((w) => w.id === p.id) : undefined;
+        const winner =
+          state.street === "showdown"
+            ? winners.find((w) => w.id === p.id)
+            : undefined;
         return (
           <PlayerSeat
             key={p.id}
@@ -182,7 +208,8 @@ export function PokerTable({ state, myId, thinkingBot = null }: Props) {
           const meIdx = seats.findIndex((s) => s.id === myId);
           const offset = meIdx >= 0 ? meIdx : 0;
           const posIndex =
-            (seats.findIndex((s) => s.id === p.id) - offset + seats.length) % seats.length;
+            (seats.findIndex((s) => s.id === p.id) - offset + seats.length) %
+            seats.length;
           const pos = positions[posIndex] ?? positions[0];
           const angle = pos.angle;
           const outwardX = Math.cos(angle);
@@ -202,7 +229,11 @@ export function PokerTable({ state, myId, thinkingBot = null }: Props) {
               }}
             >
               <div className="relative pointer-events-none">
-                <ChipStack amount={p.bet} size={compact ? 18 : 22} maxChips={3} />
+                <ChipStack
+                  amount={p.bet}
+                  size={compact ? 18 : 22}
+                  maxChips={3}
+                />
               </div>
             </div>
           );
@@ -248,14 +279,16 @@ function WinnerChipFlow({
           <div
             key={`win-${w.id}-${i}`}
             className="absolute z-20 pointer-events-none animate-win-to-seat"
-            style={{
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              ["--wx" as string]: `${(dxPct * 0.5).toFixed(2)}vw`,
-              ["--wy" as string]: `${(dyPct * 0.5).toFixed(2)}vh`,
-              animationDelay: `${i * 0.2}s`,
-            } as React.CSSProperties}
+            style={
+              {
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                ["--wx" as string]: `${(dxPct * 0.5).toFixed(2)}vw`,
+                ["--wy" as string]: `${(dyPct * 0.5).toFixed(2)}vh`,
+                animationDelay: `${i * 0.2}s`,
+              } as React.CSSProperties
+            }
           >
             <PokerChip color="gold" size={28} value={w.amount} />
           </div>

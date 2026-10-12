@@ -55,7 +55,10 @@ function listRooms(socket: WebSocket) {
   send(socket, { type: "rooms", rooms: manager.list() });
 }
 
-function adoptClientId(ctx: ClientCtx, clientId: string | undefined): string | null {
+function adoptClientId(
+  ctx: ClientCtx,
+  clientId: string | undefined,
+): string | null {
   if (!clientId) return null;
   const previous = byClientId.get(clientId);
   if (previous && previous !== ctx.socket) {
@@ -69,7 +72,9 @@ function adoptClientId(ctx: ClientCtx, clientId: string | undefined): string | n
         room?.removeClient(clientId);
       }
     }
-    try { previous.close(); } catch {}
+    try {
+      previous.close();
+    } catch {}
   }
   ctx.clientId = clientId;
   ctx.playerId = clientId;
@@ -83,7 +88,10 @@ wss.on("connection", (socket) => {
     roomId: null,
   };
   clients.set(socket, ctx);
-  log.info("connection opened", { clientId: ctx.clientId, playerId: ctx.playerId });
+  log.info("connection opened", {
+    clientId: ctx.clientId,
+    playerId: ctx.playerId,
+  });
   send(socket, { type: "system", message: "Conectado" });
   listRooms(socket);
 
@@ -153,7 +161,10 @@ wss.on("connection", (socket) => {
   });
 
   socket.on("close", () => {
-    log.info("connection closed", { clientId: ctx.clientId, playerId: ctx.playerId });
+    log.info("connection closed", {
+      clientId: ctx.clientId,
+      playerId: ctx.playerId,
+    });
     // Only remove the seat if this socket is still the "active" one for the
     // playerId. If a new socket already took over, do nothing.
     const pid = ctx.playerId;

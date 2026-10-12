@@ -86,14 +86,18 @@ describe("WS server E2E", () => {
 
     // ws1 creates
     const s1P = nextState(ws1);
-    ws1.send(JSON.stringify({ type: "create", name: "Alice", clientId: "P_AAA" }));
+    ws1.send(
+      JSON.stringify({ type: "create", name: "Alice", clientId: "P_AAA" }),
+    );
     const s1 = await s1P;
     const roomId = s1.roomId;
     expect(s1.players.length).toBe(1);
 
     // ws2 joins
     const s2P = nextState(ws2);
-    ws2.send(JSON.stringify({ type: "join", roomId, name: "Bob", clientId: "P_BBB" }));
+    ws2.send(
+      JSON.stringify({ type: "join", roomId, name: "Bob", clientId: "P_BBB" }),
+    );
     const s2 = await s2P;
     expect(s2.players.length).toBe(2);
 
@@ -111,7 +115,9 @@ describe("WS server E2E", () => {
   it("add-bots auto-starts the hand", async () => {
     const ws = await open();
     const sCreate = nextState(ws);
-    ws.send(JSON.stringify({ type: "create", name: "Alice", clientId: "P_AAA" }));
+    ws.send(
+      JSON.stringify({ type: "create", name: "Alice", clientId: "P_AAA" }),
+    );
     const s1 = await sCreate;
 
     const sBots = nextState(ws);
@@ -128,10 +134,19 @@ describe("WS server E2E", () => {
     const ws1 = await open();
     const ws2 = await open();
     const s1P = nextState(ws1);
-    ws1.send(JSON.stringify({ type: "create", name: "Alice", clientId: "P_AAA" }));
+    ws1.send(
+      JSON.stringify({ type: "create", name: "Alice", clientId: "P_AAA" }),
+    );
     const s1 = await s1P;
     const s2P = nextState(ws2);
-    ws2.send(JSON.stringify({ type: "join", roomId: s1.roomId, name: "Bob", clientId: "P_BBB" }));
+    ws2.send(
+      JSON.stringify({
+        type: "join",
+        roomId: s1.roomId,
+        name: "Bob",
+        clientId: "P_BBB",
+      }),
+    );
     await s2P;
     const afterStartP = nextState(ws1);
     ws1.send(JSON.stringify({ type: "start", clientId: "P_AAA" }));
@@ -141,11 +156,16 @@ describe("WS server E2E", () => {
     const errP = new Promise<any>((resolve) => {
       const handler = (raw: any) => {
         const m = JSON.parse(raw.toString());
-        if (m.type === "error") { ws2.off("message", handler); resolve(m); }
+        if (m.type === "error") {
+          ws2.off("message", handler);
+          resolve(m);
+        }
       };
       ws2.on("message", handler);
     });
-    ws2.send(JSON.stringify({ type: "action", action: "call", clientId: "P_BBB" }));
+    ws2.send(
+      JSON.stringify({ type: "action", action: "call", clientId: "P_BBB" }),
+    );
     const err = await errP;
     expect(err.error).toBeDefined();
 

@@ -44,8 +44,12 @@ test("two players: create + join + fold + showdown", async ({ browser }) => {
   expect(bobHeader).toContain(roomId);
 
   // Both clients should see 2 players
-  await expect(pageAlice.getByText("Bob", { exact: true })).toBeVisible({ timeout: 5_000 });
-  await expect(pageBob.getByText("Alice", { exact: true })).toBeVisible({ timeout: 5_000 });
+  await expect(pageAlice.getByText("Bob", { exact: true })).toBeVisible({
+    timeout: 5_000,
+  });
+  await expect(pageBob.getByText("Alice", { exact: true })).toBeVisible({
+    timeout: 5_000,
+  });
 
   // Either Alice or Bob is the dealer (first hand: 0). Either way, start the hand.
   // We need someone to click "Repartir mano" — Alice is the creator so she sees the button.
@@ -55,24 +59,37 @@ test("two players: create + join + fold + showdown", async ({ browser }) => {
   await repartir.click();
 
   // Wait for the hand to be in preflop
-  await pageAlice.getByText(/PREFLOP · MANO #1/i).first().waitFor({ state: "visible", timeout: 10_000 });
+  await pageAlice
+    .getByText(/PREFLOP · MANO #1/i)
+    .first()
+    .waitFor({ state: "visible", timeout: 10_000 });
 
   // Find who is on turn and have them fold. For simplicity: have BOTH fold via whichever client is up.
   // We'll loop a few times: check whose turn, fold as that player, until showdown.
   let safety = 8;
   while (safety-- > 0) {
-    const aliceState = await pageAlice.evaluate(() => document.body.textContent || "");
-    const bobState = await pageBob.evaluate(() => document.body.textContent || "");
+    const aliceState = await pageAlice.evaluate(
+      () => document.body.textContent || "",
+    );
+    const bobState = await pageBob.evaluate(
+      () => document.body.textContent || "",
+    );
     // Showdown ends with a winners panel
-    if (aliceState.includes("Ganador") || aliceState.includes("Ganadores") ||
-        bobState.includes("Ganador") || bobState.includes("Ganadores")) {
+    if (
+      aliceState.includes("Ganador") ||
+      aliceState.includes("Ganadores") ||
+      bobState.includes("Ganador") ||
+      bobState.includes("Ganadores")
+    ) {
       break;
     }
     // Check Alice's turn first
     const aliceTurn = await pageAlice.evaluate(() => {
       // The turn indicator is the ring class on a PlayerSeat; we use the log instead
-      return (document.body.textContent || "").includes("turno de Alice") ||
-             (document.body.textContent || "").match(/turno de\s+Alice/i) !== null;
+      return (
+        (document.body.textContent || "").includes("turno de Alice") ||
+        (document.body.textContent || "").match(/turno de\s+Alice/i) !== null
+      );
     });
     if (aliceTurn) {
       // Alice folds
@@ -81,7 +98,9 @@ test("two players: create + join + fold + showdown", async ({ browser }) => {
     }
     // Bob's turn
     const bobTurn = await pageBob.evaluate(() => {
-      return (document.body.textContent || "").match(/turno de\s+Bob/i) !== null;
+      return (
+        (document.body.textContent || "").match(/turno de\s+Bob/i) !== null
+      );
     });
     if (bobTurn) {
       await clickAction(pageBob, "Retirarse");
@@ -89,8 +108,14 @@ test("two players: create + join + fold + showdown", async ({ browser }) => {
     }
     // Otherwise, neither says "turno de X" — could be that turn indicator is only
     // on the action panel. Fall back to checking the action button presence.
-    const aliceActionVisible = await pageAlice.getByRole("button", { name: /Retirarse/i }).isVisible().catch(() => false);
-    const bobActionVisible = await pageBob.getByRole("button", { name: /Retirarse/i }).isVisible().catch(() => false);
+    const aliceActionVisible = await pageAlice
+      .getByRole("button", { name: /Retirarse/i })
+      .isVisible()
+      .catch(() => false);
+    const bobActionVisible = await pageBob
+      .getByRole("button", { name: /Retirarse/i })
+      .isVisible()
+      .catch(() => false);
     if (aliceActionVisible) {
       await clickAction(pageAlice, "Retirarse");
     } else if (bobActionVisible) {
@@ -101,9 +126,14 @@ test("two players: create + join + fold + showdown", async ({ browser }) => {
   }
 
   // Showdown: the winner should be visible
-  await pageAlice.getByText(/Ganador|Ganadores/).first().waitFor({ state: "visible", timeout: 10_000 });
+  await pageAlice
+    .getByText(/Ganador|Ganadores/)
+    .first()
+    .waitFor({ state: "visible", timeout: 10_000 });
   // The "▶ Siguiente mano" button should appear
-  await expect(pageAlice.getByRole("button", { name: /Siguiente/i })).toBeVisible();
+  await expect(
+    pageAlice.getByRole("button", { name: /Siguiente/i }),
+  ).toBeVisible();
 
   await ctxAlice.close();
   await ctxBob.close();

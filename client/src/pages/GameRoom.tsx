@@ -36,7 +36,13 @@ function useScale() {
   return scale;
 }
 
-export function GameRoom({ playerName, myId, roomId, onLeave, onGuide }: Props) {
+export function GameRoom({
+  playerName,
+  myId,
+  roomId,
+  onLeave,
+  onGuide,
+}: Props) {
   const { state, myHand, send, connected, error, thinkingBot } = useGameState();
   const scale = useScale();
   const [copied, setCopied] = useState(false);
@@ -104,14 +110,20 @@ export function GameRoom({ playerName, myId, roomId, onLeave, onGuide }: Props) 
               Sala <span className="text-gold-light">{showRoomCode}</span>
             </h1>
           </div>
-          {currentPlayer && <TurnTimer duration={TURN_SECONDS} resetKey={timerKey} />}
+          {currentPlayer && (
+            <TurnTimer duration={TURN_SECONDS} resetKey={timerKey} />
+          )}
           <span className="text-[10px] text-cream/60 hidden sm:inline">
             {connected ? "● Conectado" : "○ Reconectando…"}
             {error && <span className="text-pokerred ml-2">· {error}</span>}
           </span>
         </div>
         <div className="flex gap-1.5 shrink-0">
-          <button className="btn-ghost !text-[11px] !px-2.5 !py-1 !bg-cream/10 !text-cream hover:!bg-cream/20" onClick={toggleMute} title={muted ? "Activar sonido" : "Silenciar"}>
+          <button
+            className="btn-ghost !text-[11px] !px-2.5 !py-1 !bg-cream/10 !text-cream hover:!bg-cream/20"
+            onClick={toggleMute}
+            title={muted ? "Activar sonido" : "Silenciar"}
+          >
             {muted ? "🔇" : "🔊"}
           </button>
           <button
@@ -121,7 +133,8 @@ export function GameRoom({ playerName, myId, roomId, onLeave, onGuide }: Props) 
               if (!roomId) return;
               navigator.clipboard.writeText(roomId);
               setCopied(true);
-              if (copiedTimerRef.current != null) clearTimeout(copiedTimerRef.current);
+              if (copiedTimerRef.current != null)
+                clearTimeout(copiedTimerRef.current);
               copiedTimerRef.current = window.setTimeout(() => {
                 setCopied(false);
                 copiedTimerRef.current = null;
@@ -130,7 +143,10 @@ export function GameRoom({ playerName, myId, roomId, onLeave, onGuide }: Props) 
           >
             {copied ? "¡Copiado!" : "Compartir"}
           </button>
-          <button className="btn-ghost !text-[11px] !px-2.5 !py-1 !bg-cream/10 !text-cream hover:!bg-cream/20" onClick={onGuide}>
+          <button
+            className="btn-ghost !text-[11px] !px-2.5 !py-1 !bg-cream/10 !text-cream hover:!bg-cream/20"
+            onClick={onGuide}
+          >
             📖 Guía
           </button>
           <button
@@ -161,7 +177,12 @@ export function GameRoom({ playerName, myId, roomId, onLeave, onGuide }: Props) 
                 <MyHandWindow myHand={myHand} state={state} scale={scale} />
               </div>
               <div className="flex-1 min-w-0 max-w-3xl pointer-events-auto">
-                <ActionPanel state={state} myId={myId} onAction={handleAction} scale={scale} />
+                <ActionPanel
+                  state={state}
+                  myId={myId}
+                  onAction={handleAction}
+                  scale={scale}
+                />
               </div>
               <div className="pointer-events-auto">
                 <HandControls
@@ -186,11 +207,15 @@ export function GameRoom({ playerName, myId, roomId, onLeave, onGuide }: Props) 
             </div>
           </>
         ) : (
-          <div className="card-white px-6 py-4 text-ink/60 rounded-xl">Cargando mesa…</div>
+          <div className="card-white px-6 py-4 text-ink/60 rounded-xl">
+            Cargando mesa…
+          </div>
         )}
 
         {/* Floating log panel (right) */}
-        {logOpen && <LogPanel state={state} onClose={() => setLogOpen(false)} />}
+        {logOpen && (
+          <LogPanel state={state} onClose={() => setLogOpen(false)} />
+        )}
       </div>
     </div>
   );
@@ -210,7 +235,11 @@ function MyHandWindow({
   scale: number;
 }) {
   const mePlayer = state.players.find((p) => p.holeCards);
-  const hasHand = myHand && myHand.cards && state.street !== "waiting" && state.players.length > 1;
+  const hasHand =
+    myHand &&
+    myHand.cards &&
+    state.street !== "waiting" &&
+    state.players.length > 1;
   const folded = mePlayer?.folded;
 
   return (
@@ -218,9 +247,13 @@ function MyHandWindow({
       className="card-white p-2 w-28 shrink-0 pointer-events-auto animate-fade-up border border-gold/20"
       style={{ fontSize: `${scale * 0.85}rem` }}
     >
-      <div className="text-[10px] uppercase tracking-widest text-ink/50 text-center mb-1 font-display">Mi mano</div>
+      <div className="text-[10px] uppercase tracking-widest text-ink/50 text-center mb-1 font-display">
+        Mi mano
+      </div>
       {folded ? (
-        <div className="text-center text-pokerred text-[11px] font-semibold py-2">Retirado</div>
+        <div className="text-center text-pokerred text-[11px] font-semibold py-2">
+          Retirado
+        </div>
       ) : hasHand ? (
         <>
           <div className="flex justify-center gap-0.5">
@@ -231,20 +264,28 @@ function MyHandWindow({
                   key={i}
                   className="w-8 h-11 rounded-md border border-black/20 bg-gradient-to-br from-white to-cream shadow-card flex flex-col items-center justify-center text-[10px] leading-none font-display font-bold"
                 >
-                  <span className={isRed ? "text-pokerred" : "text-ink"}>{c.rank}</span>
-                  <span className={isRed ? "text-pokerred" : "text-ink"}>{c.suit}</span>
+                  <span className={isRed ? "text-pokerred" : "text-ink"}>
+                    {c.rank}
+                  </span>
+                  <span className={isRed ? "text-pokerred" : "text-ink"}>
+                    {c.suit}
+                  </span>
                 </div>
               );
             })}
           </div>
-          {state.street !== "showdown" && state.street !== "waiting" && myHand!.hand !== "—" && (
-            <div className="text-[10px] text-felt-dark text-center mt-1 font-display font-semibold leading-tight">
-              {myHand!.hand}
-            </div>
-          )}
+          {state.street !== "showdown" &&
+            state.street !== "waiting" &&
+            myHand!.hand !== "—" && (
+              <div className="text-[10px] text-felt-dark text-center mt-1 font-display font-semibold leading-tight">
+                {myHand!.hand}
+              </div>
+            )}
         </>
       ) : (
-        <div className="text-center text-ink/40 text-[11px] py-2">Esperando…</div>
+        <div className="text-center text-ink/40 text-[11px] py-2">
+          Esperando…
+        </div>
       )}
     </div>
   );
@@ -276,12 +317,18 @@ function HandControls({
       {state && !state.started && (
         <div className="card-white p-1.5">
           {state.players.length >= 2 && state.handNumber === 0 && (
-            <button className="btn-gold w-full !text-[11px] !py-1" onClick={onStart}>
+            <button
+              className="btn-gold w-full !text-[11px] !py-1"
+              onClick={onStart}
+            >
               Repartir
             </button>
           )}
           {state.players.length >= 2 && state.handNumber > 0 && (
-            <button className="btn-gold w-full !text-[11px] !py-1" onClick={onNext}>
+            <button
+              className="btn-gold w-full !text-[11px] !py-1"
+              onClick={onNext}
+            >
               Siguiente
             </button>
           )}
@@ -315,12 +362,25 @@ function HandControls({
 }
 
 /** Log panel: floating right side. */
-function LogPanel({ state, onClose }: { state: PublicState | null; onClose: () => void }) {
+function LogPanel({
+  state,
+  onClose,
+}: {
+  state: PublicState | null;
+  onClose: () => void;
+}) {
   return (
     <div className="fixed bottom-3 right-3 z-40 w-80 max-h-[60vh] card-white p-2 shadow-lift flex flex-col animate-fade-up">
       <div className="flex items-center justify-between mb-1 shrink-0">
-        <div className="text-[10px] uppercase tracking-widest text-ink/50">Registro</div>
-        <button onClick={onClose} className="text-ink/50 hover:text-ink text-sm">×</button>
+        <div className="text-[10px] uppercase tracking-widest text-ink/50">
+          Registro
+        </div>
+        <button
+          onClick={onClose}
+          className="text-ink/50 hover:text-ink text-sm"
+        >
+          ×
+        </button>
       </div>
       <ul className="flex-1 min-h-0 overflow-y-auto text-[11px] space-y-0.5 pr-1">
         <LogList log={state?.log ?? []} />
@@ -342,8 +402,8 @@ function LogList({ log }: { log: LogEntry[] }) {
             l.kind === "win"
               ? "text-gold-dark font-semibold"
               : l.kind === "system"
-              ? "text-ink/40"
-              : "text-ink/70"
+                ? "text-ink/40"
+                : "text-ink/70"
           }`}
         >
           <span className="text-ink/30 mr-1">·</span>
@@ -383,49 +443,53 @@ function TableFrame({ children }: { children: React.ReactNode }) {
     return () => ro.disconnect();
   }, []);
 
-    // The table uses the full available flex area; the bottom controls are
-    // floating and should not reduce the table size.
-    const { w: tableW, h: tableH, scale } = (() => {
-      if (!avail) return { w: 0, h: 0, scale: 1 };
-      const maxW = Math.min(BASE_W, avail.w * 0.98);
-      const maxH = avail.h * 0.98;
-      const wByWidth = maxW;
-      const hByWidth = wByWidth * (BASE_H / BASE_W);
-      let w: number;
-      let h: number;
-      if (hByWidth <= maxH) {
-        w = wByWidth;
-        h = hByWidth;
-      } else {
-        h = maxH;
-        w = h * (BASE_W / BASE_H);
-      }
-      return { w, h, scale: w / BASE_W };
-    })();
+  // The table uses the full available flex area; the bottom controls are
+  // floating and should not reduce the table size.
+  const {
+    w: tableW,
+    h: tableH,
+    scale,
+  } = (() => {
+    if (!avail) return { w: 0, h: 0, scale: 1 };
+    const maxW = Math.min(BASE_W, avail.w * 0.98);
+    const maxH = avail.h * 0.98;
+    const wByWidth = maxW;
+    const hByWidth = wByWidth * (BASE_H / BASE_W);
+    let w: number;
+    let h: number;
+    if (hByWidth <= maxH) {
+      w = wByWidth;
+      h = hByWidth;
+    } else {
+      h = maxH;
+      w = h * (BASE_W / BASE_H);
+    }
+    return { w, h, scale: w / BASE_W };
+  })();
 
-    return (
-      <div
-        ref={ref}
-        className="relative flex-1 min-h-0 flex items-start justify-center animate-fade-up overflow-hidden"
-      >
-        {avail && (
+  return (
+    <div
+      ref={ref}
+      className="relative flex-1 min-h-0 flex items-start justify-center animate-fade-up overflow-hidden"
+    >
+      {avail && (
+        <div
+          data-testid="poker-table"
+          className="relative rounded-[50%] border-[8px] border-felt-dark overflow-hidden shadow-rim shadow-table"
+          style={{ width: `${tableW}px`, height: `${tableH}px` }}
+        >
           <div
-            data-testid="poker-table"
-            className="relative rounded-[50%] border-[8px] border-felt-dark overflow-hidden shadow-rim shadow-table"
-            style={{ width: `${tableW}px`, height: `${tableH}px` }}
+            className="absolute top-1/2 left-1/2 origin-center"
+            style={{
+              width: `${BASE_W}px`,
+              height: `${BASE_H}px`,
+              transform: `translate(-50%, -50%) scale(${scale})`,
+            }}
           >
-            <div
-              className="absolute top-1/2 left-1/2 origin-center"
-              style={{
-                width: `${BASE_W}px`,
-                height: `${BASE_H}px`,
-                transform: `translate(-50%, -50%) scale(${scale})`,
-              }}
-            >
-              {children}
-            </div>
+            {children}
           </div>
-        )}
-      </div>
-    );
-  }
+        </div>
+      )}
+    </div>
+  );
+}

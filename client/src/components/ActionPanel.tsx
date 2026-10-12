@@ -47,34 +47,36 @@ export function ActionPanel({ state, myId, onAction, scale = 1 }: Props) {
           <div className="font-display text-lg text-felt-dark">
             {state.winners.map((w) => `${w.name} (${w.hand})`).join(" · ")}
           </div>
-          <div className="text-xs text-ink/60 mt-1">Premio: ${state.winners[0].amount}</div>
+          <div className="text-xs text-ink/60 mt-1">
+            Premio: ${state.winners[0].amount}
+          </div>
         </div>
       );
     }
-  return (
-    <div className="card-white p-3 text-center text-sm text-ink/60">
-      La mano ha terminado. Pulsa "Siguiente mano" para continuar.
-    </div>
-  );
-}
+    return (
+      <div className="card-white p-3 text-center text-sm text-ink/60">
+        La mano ha terminado. Pulsa "Siguiente mano" para continuar.
+      </div>
+    );
+  }
 
-// Between hands: started=false, street=waiting. The "Repartir/Siguiente mano"
-// buttons live in the sidebar of GameRoom, so we show a neutral message here.
-if (!state.started) {
-  return (
-    <div className="card-white p-3 text-center text-sm text-ink/60">
-      Esperando que se reparta la siguiente mano…
-    </div>
-  );
-}
+  // Between hands: started=false, street=waiting. The "Repartir/Siguiente mano"
+  // buttons live in the sidebar of GameRoom, so we show a neutral message here.
+  if (!state.started) {
+    return (
+      <div className="card-white p-3 text-center text-sm text-ink/60">
+        Esperando que se reparta la siguiente mano…
+      </div>
+    );
+  }
 
-if (me.chips === 0 && !me.folded) {
-  return (
-    <div className="card-white p-3 text-center text-sm text-ink/60">
-      Estás all-in. Esperando el showdown…
-    </div>
-  );
-}
+  if (me.chips === 0 && !me.folded) {
+    return (
+      <div className="card-white p-3 text-center text-sm text-ink/60">
+        Estás all-in. Esperando el showdown…
+      </div>
+    );
+  }
 
   return (
     <div
@@ -85,13 +87,18 @@ if (me.chips === 0 && !me.folded) {
     >
       <div className="flex items-center justify-between mb-1 text-xs flex-wrap gap-2">
         <div className="text-ink/60">
-          Apuesta: <span className="font-semibold text-felt-dark">${state.currentBet}</span>
+          Apuesta:{" "}
+          <span className="font-semibold text-felt-dark">
+            ${state.currentBet}
+          </span>
         </div>
         <div className="text-ink/60">
-          Igualar: <span className="font-semibold text-felt-dark">${toCall}</span>
+          Igualar:{" "}
+          <span className="font-semibold text-felt-dark">${toCall}</span>
         </div>
         <div className="text-ink/60">
-          Fichas: <span className="font-semibold text-gold-dark">${me.chips}</span>
+          Fichas:{" "}
+          <span className="font-semibold text-gold-dark">${me.chips}</span>
         </div>
       </div>
 
@@ -105,7 +112,10 @@ if (me.chips === 0 && !me.folded) {
       ) : (
         <>
           <div className="flex flex-wrap gap-1.5 justify-center mb-1.5">
-            <button className="btn-danger !px-3 !py-1 !text-xs" onClick={() => onAction("fold")}>
+            <button
+              className="btn-danger !px-3 !py-1 !text-xs"
+              onClick={() => onAction("fold")}
+            >
               Retirarse
             </button>
             <button
@@ -142,7 +152,10 @@ if (me.chips === 0 && !me.folded) {
                   type="range"
                   min={Math.min(floor, me.chips)}
                   max={me.chips}
-                  value={Math.min(Math.max(slider, Math.min(floor, me.chips)), me.chips)}
+                  value={Math.min(
+                    Math.max(slider, Math.min(floor, me.chips)),
+                    me.chips,
+                  )}
                   onChange={(e) => setSlider(Number(e.target.value))}
                   className="flex-1 accent-gold"
                 />
@@ -151,7 +164,10 @@ if (me.chips === 0 && !me.folded) {
                   className="input w-14 !py-0.5 !px-1"
                   min={Math.min(floor, me.chips)}
                   max={me.chips}
-                  value={Math.min(Math.max(slider, Math.min(floor, me.chips)), me.chips)}
+                  value={Math.min(
+                    Math.max(slider, Math.min(floor, me.chips)),
+                    me.chips,
+                  )}
                   onChange={(e) => {
                     const v = Number(e.target.value);
                     if (Number.isFinite(v)) setSlider(v);
@@ -160,7 +176,10 @@ if (me.chips === 0 && !me.folded) {
                 <button
                   className="btn-gold !px-3 !py-1 !text-xs"
                   onClick={() => {
-                    const amt = Math.min(Math.max(slider, Math.min(floor, me.chips)), me.chips);
+                    const amt = Math.min(
+                      Math.max(slider, Math.min(floor, me.chips)),
+                      me.chips,
+                    );
                     onAction(isOpening ? "bet" : "raise", amt);
                   }}
                 >
@@ -172,7 +191,17 @@ if (me.chips === 0 && !me.folded) {
                   <button
                     key={m}
                     className="text-[9px] px-1.5 py-0.5 rounded-full bg-felt-dark/10 hover:bg-felt-dark/20"
-                    onClick={() => setSlider(Math.min(Math.max(Math.floor(me.chips * m), Math.min(floor, me.chips)), me.chips))}
+                    onClick={() =>
+                      setSlider(
+                        Math.min(
+                          Math.max(
+                            Math.floor(me.chips * m),
+                            Math.min(floor, me.chips),
+                          ),
+                          me.chips,
+                        ),
+                      )
+                    }
                   >
                     {m === 1 ? "100%" : `${m * 100}%`}
                   </button>
