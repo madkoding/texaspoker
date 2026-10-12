@@ -97,7 +97,11 @@ export class GameEngine {
     this.seats = new Array(max).fill(null);
   }
 
-  addPlayer(id: string, name: string, chips?: number): { ok: boolean; reason?: string; seatIndex?: number } {
+  addPlayer(
+    id: string,
+    name: string,
+    chips?: number,
+  ): { ok: boolean; reason?: string; seatIndex?: number } {
     log.debug("addPlayer", { id, name, chips });
     // Dedup against both seated and active players
     if (this.players.some((p) => p.id === id)) {
@@ -116,14 +120,30 @@ export class GameEngine {
       log.warn("addPlayer: room full", { id });
       return { ok: false, reason: "Sala llena" };
     }
-    const config: SeatConfig = { id, name, seatIndex: emptySeat, chips: chips ?? this.startingChips };
+    const config: SeatConfig = {
+      id,
+      name,
+      seatIndex: emptySeat,
+      chips: chips ?? this.startingChips,
+    };
     this.seats[emptySeat] = config;
-    log.info("player seated", { id, name, seat: emptySeat, started: this.started });
+    log.info("player seated", {
+      id,
+      name,
+      seat: emptySeat,
+      started: this.started,
+    });
     if (!this.started) {
-      this.logEntry(`${name} se ha sentado en la silla ${emptySeat + 1}`, "system");
+      this.logEntry(
+        `${name} se ha sentado en la silla ${emptySeat + 1}`,
+        "system",
+      );
       return { ok: true, seatIndex: emptySeat };
     }
-    return { ok: false, reason: "Partida en curso, únete cuando termine la mano" };
+    return {
+      ok: false,
+      reason: "Partida en curso, únete cuando termine la mano",
+    };
   }
 
   // Fill empty seats with bots until we have `target` total seated players
@@ -132,7 +152,10 @@ export class GameEngine {
     const humanCount = this.seats.filter((s) => s !== null && !s.isBot).length;
     const botCount = this.seats.filter((s) => s !== null && s.isBot).length;
     const total = humanCount + botCount;
-    log.debug("addBots", { target, current: { humans: humanCount, bots: botCount } });
+    log.debug("addBots", {
+      target,
+      current: { humans: humanCount, bots: botCount },
+    });
     let added = 0;
     while (total + added < target) {
       const empty = this.seats.findIndex((s) => s === null);
@@ -164,7 +187,10 @@ export class GameEngine {
         isBigBlind: false,
         isTurn: false,
         hasCards: false,
-        holeCards: [{ rank: "2", suit: "♠" }, { rank: "2", suit: "♠" }],
+        holeCards: [
+          { rank: "2", suit: "♠" },
+          { rank: "2", suit: "♠" },
+        ],
         seatIndex: s.seatIndex,
         isBot: !!s.isBot,
       }));
@@ -185,7 +211,14 @@ export class GameEngine {
     this.cancelBotTimer(p.id);
 
     const state = this.toPublicState(p.id);
-    const me: { id: string; chips: number; bet: number; folded: boolean; allIn: boolean; holeCards: [Card, Card] } = {
+    const me: {
+      id: string;
+      chips: number;
+      bet: number;
+      folded: boolean;
+      allIn: boolean;
+      holeCards: [Card, Card];
+    } = {
       id: p.id,
       chips: p.chips,
       bet: p.bet,
@@ -194,10 +227,17 @@ export class GameEngine {
       holeCards: p.holeCards,
     };
     const decision = decideBotAction({ me, state, community: this.community });
-    log.debug("bot turn", { name: p.name, action: decision.type, amount: decision.amount, street: this.street, toCall: state.currentBet - p.bet });
+    log.debug("bot turn", {
+      name: p.name,
+      action: decision.type,
+      amount: decision.amount,
+      street: this.street,
+      toCall: state.currentBet - p.bet,
+    });
     this.onBotTurnEnd?.(p.name, p.id);
     const res = this.applyAction(p.id, decision.type, decision.amount);
-    if (!res.ok) log.warn("bot action rejected", { name: p.name, reason: res.reason });
+    if (!res.ok)
+      log.warn("bot action rejected", { name: p.name, reason: res.reason });
     return true;
   }
 
@@ -257,7 +297,10 @@ export class GameEngine {
     const min = this.botMinDelayMs;
     const max = this.botMaxDelayMs;
     const delay = min + Math.random() * (max - min);
-    log.debug("scheduling bot turn", { name: p.name, delayMs: Math.round(delay) });
+    log.debug("scheduling bot turn", {
+      name: p.name,
+      delayMs: Math.round(delay),
+    });
     this.onBotTurnStart?.(p.name, p.id);
     const t = setTimeout(() => {
       this.botTurnTimers.delete(p.id);
@@ -286,7 +329,7 @@ export class GameEngine {
       this.actedSinceLastBet = new Set(
         Array.from(this.actedSinceLastBet)
           .filter((i) => i < idx || i > idx)
-          .map((i) => (i > idx ? i - 1 : i))
+          .map((i) => (i > idx ? i - 1 : i)),
       );
       if (this.players.length < 2) {
         log.info("ending game: < 2 players");
@@ -303,7 +346,10 @@ export class GameEngine {
   }
 
   startHand() {
-    if (this.started) { log.debug("startHand: already started"); return; }
+    if (this.started) {
+      log.debug("startHand: already started");
+      return;
+    }
     const seated = this.seats.filter((s) => s !== null) as SeatConfig[];
     if (seated.length < 2) {
       log.warn("startHand: < 2 players", { count: seated.length });
@@ -322,7 +368,10 @@ export class GameEngine {
       isBigBlind: false,
       isTurn: false,
       hasCards: false,
-      holeCards: [{ rank: "2", suit: "♠" }, { rank: "2", suit: "♠" }],
+      holeCards: [
+        { rank: "2", suit: "♠" },
+        { rank: "2", suit: "♠" },
+      ],
       seatIndex: s.seatIndex,
       isBot: !!s.isBot,
     }));
@@ -335,7 +384,10 @@ export class GameEngine {
 
   private beginHand() {
     if (this.players.length < 2) {
-      this.logEntry("Se necesitan al menos 2 jugadores para repartir", "system");
+      this.logEntry(
+        "Se necesitan al menos 2 jugadores para repartir",
+        "system",
+      );
       this.started = false;
       return;
     }
@@ -377,8 +429,18 @@ export class GameEngine {
     }
 
     this.street = "preflop";
-    log.info("hand begin", { hand: this.handNumber, players: this.players.length, dealer: this.dealerIdx, sb: this.smallBlindIdx, bb: this.bigBlindIdx, toAct: this.toAct });
-    this.logEntry(`Mano #${this.handNumber} · ${this.players[this.dealerIdx].name} reparte`, "info");
+    log.info("hand begin", {
+      hand: this.handNumber,
+      players: this.players.length,
+      dealer: this.dealerIdx,
+      sb: this.smallBlindIdx,
+      bb: this.bigBlindIdx,
+      toAct: this.toAct,
+    });
+    this.logEntry(
+      `Mano #${this.handNumber} · ${this.players[this.dealerIdx].name} reparte`,
+      "info",
+    );
     this.logEntry(`Blinds: ${this.smallBlindAmt}/${this.bigBlindAmt}`, "info");
   }
 
@@ -392,15 +454,38 @@ export class GameEngine {
   }
 
   applyAction(playerId: string, action: string, amount?: number) {
-    if (!this.started) { log.debug("applyAction: not started"); return { ok: false, reason: "La partida no ha comenzado" }; }
+    if (!this.started) {
+      log.debug("applyAction: not started");
+      return { ok: false, reason: "La partida no ha comenzado" };
+    }
     const idx = this.players.findIndex((p) => p.id === playerId);
-    if (idx === -1) { log.debug("applyAction: not found", { playerId }); return { ok: false, reason: "Jugador no encontrado" }; }
-    if (idx !== this.toAct) { log.debug("applyAction: not your turn", { playerId, toAct: this.toAct, idx }); return { ok: false, reason: "No es tu turno" }; }
-    if (this.players[idx].folded || this.players[idx].allIn) { log.debug("applyAction: cannot act", { playerId }); return { ok: false, reason: "No puedes actuar" }; }
+    if (idx === -1) {
+      log.debug("applyAction: not found", { playerId });
+      return { ok: false, reason: "Jugador no encontrado" };
+    }
+    if (idx !== this.toAct) {
+      log.debug("applyAction: not your turn", {
+        playerId,
+        toAct: this.toAct,
+        idx,
+      });
+      return { ok: false, reason: "No es tu turno" };
+    }
+    if (this.players[idx].folded || this.players[idx].allIn) {
+      log.debug("applyAction: cannot act", { playerId });
+      return { ok: false, reason: "No puedes actuar" };
+    }
 
     const p = this.players[idx];
     const toCall = this.currentBet - p.bet;
-    log.debug("applyAction", { player: p.name, action, amount, toCall, street: this.street, currentBet: this.currentBet });
+    log.debug("applyAction", {
+      player: p.name,
+      action,
+      amount,
+      toCall,
+      street: this.street,
+      currentBet: this.currentBet,
+    });
 
     switch (action) {
       case "fold": {
@@ -418,7 +503,8 @@ export class GameEngine {
         break;
       }
       case "call": {
-        if (toCall === 0) return { ok: false, reason: "No hay nada que igualar (usa 'check')" };
+        if (toCall === 0)
+          return { ok: false, reason: "No hay nada que igualar (usa 'check')" };
         const pay = Math.min(toCall, p.chips);
         p.chips -= pay;
         p.bet += pay;
@@ -430,12 +516,17 @@ export class GameEngine {
         break;
       }
       case "bet": {
-        if (this.currentBet > 0) return { ok: false, reason: "Usa 'raise' en lugar de 'bet'" };
+        if (this.currentBet > 0)
+          return { ok: false, reason: "Usa 'raise' en lugar de 'bet'" };
         if (this.raisesThisStreet >= GameEngine.MAX_RAISES_PER_STREET) {
-          return { ok: false, reason: "Límite de subidas alcanzado en esta calle" };
+          return {
+            ok: false,
+            reason: "Límite de subidas alcanzado en esta calle",
+          };
         }
         const betAmt = Math.max(this.minRaise, amount ?? 0);
-        if (betAmt > p.chips) return { ok: false, reason: "Sin fichas suficientes" };
+        if (betAmt > p.chips)
+          return { ok: false, reason: "Sin fichas suficientes" };
         p.chips -= betAmt;
         p.bet += betAmt;
         this.pot += betAmt;
@@ -450,18 +541,30 @@ export class GameEngine {
         break;
       }
       case "raise": {
-        if (this.currentBet === 0) return { ok: false, reason: "Usa 'bet' en lugar de 'raise'" };
+        if (this.currentBet === 0)
+          return { ok: false, reason: "Usa 'bet' en lugar de 'raise'" };
         const requestedRaise = amount ?? this.currentBet + this.minRaise;
         // Allow all-in for less than the minimum raise
-        const isAllInShort = requestedRaise < this.currentBet + this.minRaise && requestedRaise >= p.chips + p.bet;
-        const raiseAmt = isAllInShort ? p.chips + p.bet : Math.max(this.currentBet + this.minRaise, requestedRaise);
+        const isAllInShort =
+          requestedRaise < this.currentBet + this.minRaise &&
+          requestedRaise >= p.chips + p.bet;
+        const raiseAmt = isAllInShort
+          ? p.chips + p.bet
+          : Math.max(this.currentBet + this.minRaise, requestedRaise);
         const pay = raiseAmt - p.bet;
         if (pay <= 0) return { ok: false, reason: "Cantidad inválida" };
-        if (pay > p.chips) return { ok: false, reason: "Sin fichas suficientes" };
+        if (pay > p.chips)
+          return { ok: false, reason: "Sin fichas suficientes" };
         // Reject raises beyond the per-street cap (all-in for less is
         // always allowed; it just won't open action to other players).
-        if (!isAllInShort && this.raisesThisStreet >= GameEngine.MAX_RAISES_PER_STREET) {
-          return { ok: false, reason: "Límite de subidas alcanzado en esta calle" };
+        if (
+          !isAllInShort &&
+          this.raisesThisStreet >= GameEngine.MAX_RAISES_PER_STREET
+        ) {
+          return {
+            ok: false,
+            reason: "Límite de subidas alcanzado en esta calle",
+          };
         }
         p.chips -= pay;
         p.bet += pay;
@@ -530,7 +633,9 @@ export class GameEngine {
     // and everyone (except all-ins) has bet === currentBet
     const needToAct = this.players.filter((p) => !p.folded && !p.allIn);
     const allMatched = needToAct.every((p) => p.bet === this.currentBet);
-    const allActed = needToAct.every((p) => this.actedSinceLastBet.has(this.players.indexOf(p)));
+    const allActed = needToAct.every((p) =>
+      this.actedSinceLastBet.has(this.players.indexOf(p)),
+    );
 
     if (allMatched && allActed) {
       // If nobody can act (everyone is all-in or folded), go straight to showdown
@@ -567,17 +672,26 @@ export class GameEngine {
       case "preflop":
         this.dealCommunity(3);
         this.street = "flop";
-        this.logEntry(`Flop: ${this.community.map((c) => c.rank + c.suit).join(" ")}`, "info");
+        this.logEntry(
+          `Flop: ${this.community.map((c) => c.rank + c.suit).join(" ")}`,
+          "info",
+        );
         break;
       case "flop":
         this.dealCommunity(1);
         this.street = "turn";
-        this.logEntry(`Turn: ${this.community[3].rank + this.community[3].suit}`, "info");
+        this.logEntry(
+          `Turn: ${this.community[3].rank + this.community[3].suit}`,
+          "info",
+        );
         break;
       case "turn":
         this.dealCommunity(1);
         this.street = "river";
-        this.logEntry(`River: ${this.community[4].rank + this.community[4].suit}`, "info");
+        this.logEntry(
+          `River: ${this.community[4].rank + this.community[4].suit}`,
+          "info",
+        );
         break;
       case "river":
         this.showdown();
@@ -586,7 +700,10 @@ export class GameEngine {
 
     // next to act = first live player after dealer. In heads-up (2 players)
     // the dealer/SB acts first post-flop (standard rule).
-    const startIdx = this.players.length === 2 ? this.dealerIdx : (this.dealerIdx + 1) % this.players.length;
+    const startIdx =
+      this.players.length === 2
+        ? this.dealerIdx
+        : (this.dealerIdx + 1) % this.players.length;
     let next = startIdx;
     let safety = 0;
     while (safety++ < this.players.length) {
@@ -608,7 +725,9 @@ export class GameEngine {
   private showdown() {
     this.street = "showdown";
     this.communityRevealed = 5;
-    log.info("showdown", { live: this.players.filter(p => !p.folded).map(p => p.name) });
+    log.info("showdown", {
+      live: this.players.filter((p) => !p.folded).map((p) => p.name),
+    });
     this.logEntry("Showdown", "info");
     const live = this.players.filter((p) => !p.folded);
     const evaluated = live.map((p) => ({
@@ -619,14 +738,22 @@ export class GameEngine {
     const best = evaluated[0].ev.rank;
     const bestKickers = evaluated[0].ev.kickers;
     const winners = evaluated.filter(
-      (e) => e.ev.rank === best && e.ev.kickers.every((k, i) => k === bestKickers[i])
+      (e) =>
+        e.ev.rank === best &&
+        e.ev.kickers.every((k, i) => k === bestKickers[i]),
     );
-    this.endHand(winners.map((w) => w.p.id), evaluated);
+    this.endHand(
+      winners.map((w) => w.p.id),
+      evaluated,
+    );
   }
 
   private endHand(
     winnerIds: string[],
-    evaluated?: { p: PrivatePlayer; ev: { name: HandName; rank: number; cards: Card[]; kickers: number[] } }[]
+    evaluated?: {
+      p: PrivatePlayer;
+      ev: { name: HandName; rank: number; cards: Card[]; kickers: number[] };
+    }[],
   ) {
     log.info("endHand", { winners: winnerIds, pot: this.pot });
     this.street = "showdown";
@@ -641,7 +768,12 @@ export class GameEngine {
       const extra = i < remainder ? 1 : 0;
       const amount = baseShare + extra;
       p.chips += amount;
-      let ev: { name: HandName; rank: number; cards: Card[]; kickers: number[] };
+      let ev: {
+        name: HandName;
+        rank: number;
+        cards: Card[];
+        kickers: number[];
+      };
       const found = evaluated?.find((e) => e.p.id === id);
       if (found) {
         ev = found.ev;
@@ -699,11 +831,20 @@ export class GameEngine {
   }
 
   nextHand() {
-    if (this.started) { log.debug("nextHand: already started"); return; }
-    log.info("nextHand requested", { currentHand: this.handNumber, players: this.players.length, seats: this.seats.filter(s=>s).length });
+    if (this.started) {
+      log.debug("nextHand: already started");
+      return;
+    }
+    log.info("nextHand requested", {
+      currentHand: this.handNumber,
+      players: this.players.length,
+      seats: this.seats.filter((s) => s).length,
+    });
     // Re-fill players from seats if previous hand left it empty
     if (this.players.length === 0) {
-      const seated = (this.seats.filter((s) => s !== null && s.chips > 0) as SeatConfig[]);
+      const seated = this.seats.filter(
+        (s) => s !== null && s.chips > 0,
+      ) as SeatConfig[];
       this.players = seated.map((s) => ({
         id: s.id,
         name: s.name,
@@ -716,7 +857,10 @@ export class GameEngine {
         isBigBlind: false,
         isTurn: false,
         hasCards: false,
-        holeCards: [{ rank: "2", suit: "♠" }, { rank: "2", suit: "♠" }],
+        holeCards: [
+          { rank: "2", suit: "♠" },
+          { rank: "2", suit: "♠" },
+        ],
         seatIndex: s.seatIndex,
       }));
     }
@@ -732,13 +876,24 @@ export class GameEngine {
   }
 
   logEntry(message: string, kind: LogEntry["kind"] = "info") {
-    this.log.unshift({ id: Math.random().toString(36).slice(2), message, ts: Date.now(), kind });
+    this.log.unshift({
+      id: Math.random().toString(36).slice(2),
+      message,
+      ts: Date.now(),
+      kind,
+    });
     if (this.log.length > 60) this.log = this.log.slice(0, 60);
   }
 
   toPublicState(viewerId?: string): PublicState {
     const state = this._toPublicState(viewerId);
-    log.debug("toPublicState", { viewerId, roomId: state.roomId, street: state.street, players: state.players.length, pot: state.pot });
+    log.debug("toPublicState", {
+      viewerId,
+      roomId: state.roomId,
+      street: state.street,
+      players: state.players.length,
+      pot: state.pot,
+    });
     return state;
   }
 
@@ -760,34 +915,43 @@ export class GameEngine {
           isDealer: i === this.dealerIdx,
           isSmallBlind: i === this.smallBlindIdx,
           isBigBlind: i === this.bigBlindIdx,
-          isTurn: this.started && i === this.toAct && this.street !== "showdown" && !p.folded && !p.allIn,
+          isTurn:
+            this.started &&
+            i === this.toAct &&
+            this.street !== "showdown" &&
+            !p.folded &&
+            !p.allIn,
           hasCards: p.hasCards && (showAtShowdown || isViewer),
-          holeCards: (showAtShowdown || isViewer) ? p.holeCards : undefined,
+          holeCards: showAtShowdown || isViewer ? p.holeCards : undefined,
           lastAction: p.lastAction,
           seatIndex: p.seatIndex,
           isBot: p.id.startsWith("bot-"),
         };
       });
     } else {
-      players = (this.seats
-        .map((s, seatIndex) => s ? {
-          id: s.id,
-          name: s.name,
-          chips: s.chips,
-          bet: 0,
-          folded: false,
-          allIn: false,
-          isDealer: false,
-          isSmallBlind: false,
-          isBigBlind: false,
-          isTurn: false,
-          hasCards: false,
-          holeCards: undefined,
-          lastAction: null,
-          seatIndex,
-          isBot: !!s.isBot,
-        } : null)
-        .filter(Boolean) as PublicPlayer[]);
+      players = this.seats
+        .map((s, seatIndex) =>
+          s
+            ? {
+                id: s.id,
+                name: s.name,
+                chips: s.chips,
+                bet: 0,
+                folded: false,
+                allIn: false,
+                isDealer: false,
+                isSmallBlind: false,
+                isBigBlind: false,
+                isTurn: false,
+                hasCards: false,
+                holeCards: undefined,
+                lastAction: null,
+                seatIndex,
+                isBot: !!s.isBot,
+              }
+            : null,
+        )
+        .filter(Boolean) as PublicPlayer[];
     }
     return {
       roomId: this.roomId,
@@ -811,7 +975,12 @@ export class GameEngine {
   privateHandFor(playerId: string) {
     const p = this.players.find((x) => x.id === playerId);
     if (!p) return null;
-    if (this.community.length < 5 || this.street === "preflop" || this.street === "flop" || this.street === "turn") {
+    if (
+      this.community.length < 5 ||
+      this.street === "preflop" ||
+      this.street === "flop" ||
+      this.street === "turn"
+    ) {
       return { id: p.id, hand: "—" as unknown as HandName, cards: p.holeCards };
     }
     const ev = evaluateHand([...p.holeCards, ...this.community]);

@@ -41,12 +41,12 @@ function ActionStamp({ action, amount }: { action: string; amount?: number }) {
     action === "fold"
       ? "animate-card-fold text-white bg-pokerred/90"
       : action === "check"
-      ? "animate-check-tap text-felt-dark bg-felt/20"
-      : action === "raise" || action === "bet"
-      ? "animate-raise-bounce text-felt-dark bg-gold"
-      : action === "all-in"
-      ? "animate-all-in text-white bg-pokerred"
-      : "animate-fade-up text-felt-dark bg-white/80";
+        ? "animate-check-tap text-felt-dark bg-felt/20"
+        : action === "raise" || action === "bet"
+          ? "animate-raise-bounce text-felt-dark bg-gold"
+          : action === "all-in"
+            ? "animate-all-in text-white bg-pokerred"
+            : "animate-fade-up text-felt-dark bg-white/80";
   return (
     <div className={`${base} ${cls}`} key={action}>
       {actionLabel[action]}
@@ -142,7 +142,8 @@ export function PlayerSeat({
             {winnerHand}
           </div>
         ) : (
-          player.lastAction && !player.folded && (
+          player.lastAction &&
+          !player.folded && (
             <ActionStamp action={player.lastAction} amount={player.bet} />
           )
         )}
@@ -161,7 +162,6 @@ export function PlayerSeat({
           {player.isSmallBlind && <RoleChip role="SB" size={chipSize - 6} />}
           {player.isBigBlind && <RoleChip role="BB" size={chipSize - 6} />}
         </div>
-
       </div>
 
       {/* ROW 3: Hole cards */}
@@ -196,13 +196,20 @@ export function PlayerSeat({
           no total here (total is in row 5) */}
       {player.chips > 0 && (
         <div className="mt-0.5">
-          <PlayerChipStack amount={player.chips} size={chipSize} maxPerTower={2} showTotal={false} />
+          <PlayerChipStack
+            amount={player.chips}
+            size={chipSize}
+            maxPerTower={2}
+            showTotal={false}
+          />
         </div>
       )}
 
       {/* ROW 5: Total numeric amount — always reserved (min-h) to avoid shifts */}
       <div className="min-h-[18px] flex items-center justify-center mt-0.5">
-        <span className={`font-display font-bold text-gold-light tabular-nums drop-shadow whitespace-nowrap bg-black/60 rounded-full px-2 py-0.5 ${compact ? "text-[11px]" : "text-[13px]"}`}>
+        <span
+          className={`font-display font-bold text-gold-light tabular-nums drop-shadow whitespace-nowrap bg-black/60 rounded-full px-2 py-0.5 ${compact ? "text-[11px]" : "text-[13px]"}`}
+        >
           ${abbreviate(player.chips)}
         </span>
       </div>
@@ -238,8 +245,6 @@ export function PlayerSeat({
         </div>
       )}
 
-
-
       {/* ALL-IN badge — at the outer edge */}
       {player.allIn && !player.folded && (
         <div
@@ -256,5 +261,3 @@ export function PlayerSeat({
     </div>
   );
 }
-
-

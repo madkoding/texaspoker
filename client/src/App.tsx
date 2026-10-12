@@ -14,7 +14,9 @@ type View = "name" | "lobby" | "room" | "guide";
 const NAME_KEY = "texaspoker.name";
 
 export default function App() {
-  const [view, setView] = useState<View>(() => (localStorage.getItem(NAME_KEY) ? "lobby" : "name"));
+  const [view, setView] = useState<View>(() =>
+    localStorage.getItem(NAME_KEY) ? "lobby" : "name",
+  );
   const [name, setName] = useState(localStorage.getItem(NAME_KEY) ?? "");
   const { clientId: myId } = useSocketContext();
   const [roomId, setRoomId] = useState<string | null>(null);

@@ -29,15 +29,23 @@ export async function clearStorage(page: Page) {
 export async function gotoLobby(page: Page) {
   await page.goto("/");
   // Wait until the lobby title is visible
-  await page.getByText("Texas").first().waitFor({ state: "visible", timeout: 10_000 });
+  await page
+    .getByText("Texas")
+    .first()
+    .waitFor({ state: "visible", timeout: 10_000 });
 }
 
 export async function gotoGuide(page: Page) {
   await page.goto("/");
-  await page.getByText("Texas").first().waitFor({ state: "visible", timeout: 10_000 });
+  await page
+    .getByText("Texas")
+    .first()
+    .waitFor({ state: "visible", timeout: 10_000 });
   await page.getByRole("button", { name: /Ver guía de manos/i }).click();
   // The guide has a header with "Combinaciones del" in an h1
-  await page.getByRole("heading", { name: /Combinaciones del/i }).waitFor({ state: "visible", timeout: 10_000 });
+  await page
+    .getByRole("heading", { name: /Combinaciones del/i })
+    .waitFor({ state: "visible", timeout: 10_000 });
 }
 
 /** Wait for the WebSocket to be open. */
@@ -45,10 +53,12 @@ export async function waitForWs(page: Page) {
   await page.waitForFunction(
     () => {
       // We can't see the WS directly, but we can wait for the connection indicator
-      return document.body.textContent?.includes("Conectado al servidor") ||
-             document.body.textContent?.includes("Conectado");
+      return (
+        document.body.textContent?.includes("Conectado al servidor") ||
+        document.body.textContent?.includes("Conectado")
+      );
     },
-    { timeout: 10_000 }
+    { timeout: 10_000 },
   );
 }
 
@@ -61,8 +71,11 @@ export async function openDebugPanel(page: Page) {
 export async function readDebugLog(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const raw = sessionStorage.getItem("texaspoker.log") || "[]";
-    try { return (JSON.parse(raw) as { msg: string }[]).map((e) => e.msg); }
-    catch { return []; }
+    try {
+      return (JSON.parse(raw) as { msg: string }[]).map((e) => e.msg);
+    } catch {
+      return [];
+    }
   });
 }
 
@@ -79,7 +92,9 @@ export async function createRoom(page: Page, playerName: string) {
 export async function joinRoomByCode(page: Page, code: string) {
   await page.getByRole("textbox", { name: /CÓDIGO/i }).fill(code);
   await page.getByRole("button", { name: /^Entrar$/i }).click();
-  await page.getByText(new RegExp(`Sala ${code}`)).waitFor({ state: "visible", timeout: 10_000 });
+  await page
+    .getByText(new RegExp(`Sala ${code}`))
+    .waitFor({ state: "visible", timeout: 10_000 });
 }
 
 /** Click "Jugar contra bots" in the GameRoom. */
@@ -87,11 +102,17 @@ export async function playVsBots(page: Page) {
   await page.waitForTimeout(500);
   await page.getByRole("button", { name: /Bots$/ }).first().click();
   // Wait for the hand to start. The street label uses the form "PREFLOP · MANO #1".
-  await page.getByText(/PREFLOP · MANO #1/i).first().waitFor({ state: "visible", timeout: 10_000 });
+  await page
+    .getByText(/PREFLOP · MANO #1/i)
+    .first()
+    .waitFor({ state: "visible", timeout: 10_000 });
 }
 
 /** Click a specific action button. */
-export async function clickAction(page: Page, action: "Retirarse" | "Pasar" | "Igualar" | "All-in") {
+export async function clickAction(
+  page: Page,
+  action: "Retirarse" | "Pasar" | "Igualar" | "All-in",
+) {
   const btn = page.getByRole("button", { name: new RegExp(`^${action}`) });
   await btn.waitFor({ state: "visible" });
   await btn.click({ force: true });
@@ -99,7 +120,10 @@ export async function clickAction(page: Page, action: "Retirarse" | "Pasar" | "I
 
 /** Get the room id (5-char code) from the page header. */
 export async function getRoomId(page: Page): Promise<string> {
-  const text = await page.getByText(/^Sala /).first().textContent();
+  const text = await page
+    .getByText(/^Sala /)
+    .first()
+    .textContent();
   const m = text?.match(/Sala\s+(\w+)/);
   if (!m) throw new Error("Could not find room id in: " + text);
   return m[1];

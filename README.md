@@ -2,7 +2,7 @@
 
 Juego de **Texas Hold'em** multijugador en tiempo real con sistema de diseño
 basado en la guía visual del `index.html` original (verde felt, dorado, tipografías
-*Playfair Display* + *Inter*).
+_Playfair Display_ + _Inter_).
 
 **Stack:** React 18 + Vite + TypeScript + Tailwind CSS · Node.js + WebSockets (`ws`).
 
@@ -77,7 +77,7 @@ Reutiliza la paleta y tipografías del `index.html` original:
 - **Dorado:** `#d4af37` (acentos) / `#f1d26a` (claro)
 - **Crema:** `#faf6ee` (fondo)
 - **Rojo póker:** `#c0392b` (palos rojos y fold)
-- **Tipografías:** *Playfair Display* (títulos/manos) + *Inter* (UI)
+- **Tipografías:** _Playfair Display_ (títulos/manos) + _Inter_ (UI)
 - **Cartas:** replicas 1:1 del estilo del original (esquinas, palo central,
   color rojo/negro, sombra `0 3px 6px rgba(0,0,0,.15)`)
 
@@ -89,6 +89,7 @@ La página **"Guía"** (botón 📖) replica exactamente el contenido del
 `wss://host/ws` — mensajes JSON:
 
 **Cliente → Servidor**
+
 - `list` — pedir salas activas
 - `create { name }` — crear sala
 - `join { roomId, name }` — unirse a sala
@@ -98,6 +99,7 @@ La página **"Guía"** (botón 📖) replica exactamente el contenido del
 - `action { action, amount? }` — fold/check/call/bet/raise/all-in
 
 **Servidor → Cliente**
+
 - `state { state, you }` — snapshot público + tus cartas privadas
 - `rooms [...]` — lista de salas
 - `system` / `error` — mensajes

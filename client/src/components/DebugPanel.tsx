@@ -25,7 +25,9 @@ export function DebugPanel() {
   }
 
   let entries: { ts: number; level: string; ns: string; msg: string }[] = [];
-  try { entries = JSON.parse(text); } catch {}
+  try {
+    entries = JSON.parse(text);
+  } catch {}
 
   return (
     <div className="fixed bottom-0 right-0 z-50 w-[480px] h-[300px] bg-black/90 text-green-200 text-[10px] font-mono flex flex-col rounded-tl-lg shadow-2xl">
@@ -33,7 +35,10 @@ export function DebugPanel() {
         <span className="font-bold">Debug · {entries.length} entries</span>
         <div className="flex gap-2">
           <button
-            onClick={() => { clearLogs(); setText("[]"); }}
+            onClick={() => {
+              clearLogs();
+              setText("[]");
+            }}
             className="px-2 py-0.5 bg-red-700 text-white rounded hover:bg-red-600"
           >
             Clear
@@ -52,7 +57,12 @@ export function DebugPanel() {
           >
             Download
           </button>
-          <button onClick={() => setOpen(false)} className="px-2 py-0.5 bg-white/20 text-white rounded hover:bg-white/30">×</button>
+          <button
+            onClick={() => setOpen(false)}
+            className="px-2 py-0.5 bg-white/20 text-white rounded hover:bg-white/30"
+          >
+            ×
+          </button>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto p-2 leading-tight">
@@ -65,10 +75,13 @@ export function DebugPanel() {
             <div
               key={i}
               className={
-                e.level === "ERROR" ? "text-red-300" :
-                e.level === "WARN" ? "text-yellow-300" :
-                e.level === "INFO" ? "text-cyan-200" :
-                "text-green-200/70"
+                e.level === "ERROR"
+                  ? "text-red-300"
+                  : e.level === "WARN"
+                    ? "text-yellow-300"
+                    : e.level === "INFO"
+                      ? "text-cyan-200"
+                      : "text-green-200/70"
               }
             >
               {e.msg}

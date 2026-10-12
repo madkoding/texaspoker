@@ -16,7 +16,9 @@ export function NamePrompt({ onSubmit, initial = "" }: Props) {
         <h1 className="font-display text-4xl text-felt-dark text-center mb-1">
           Texas <span className="text-gold">Poker</span>
         </h1>
-        <p className="text-center text-ink/60 text-sm mb-6">Multiplayer · WebSockets · Texas Hold'em</p>
+        <p className="text-center text-ink/60 text-sm mb-6">
+          Multiplayer · WebSockets · Texas Hold'em
+        </p>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -24,7 +26,9 @@ export function NamePrompt({ onSubmit, initial = "" }: Props) {
           }}
           className="space-y-4"
         >
-          <label className="block text-sm font-medium text-ink/70">Elige tu nombre de jugador</label>
+          <label className="block text-sm font-medium text-ink/70">
+            Elige tu nombre de jugador
+          </label>
           <input
             autoFocus
             className="input text-center text-lg"
@@ -33,7 +37,11 @@ export function NamePrompt({ onSubmit, initial = "" }: Props) {
             onChange={(e) => setName(e.target.value)}
             placeholder="p. ej. Maverick"
           />
-          <button type="submit" className="btn-gold w-full !py-3" disabled={name.trim().length < 2}>
+          <button
+            type="submit"
+            className="btn-gold w-full !py-3"
+            disabled={name.trim().length < 2}
+          >
             Entrar al lobby
           </button>
         </form>

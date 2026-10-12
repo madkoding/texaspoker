@@ -11,7 +11,9 @@ test("table resizes correctly across viewports", async ({ browser }) => {
   test.setTimeout(60_000);
 
   // Use a context that we can resize
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const ctx = await browser.newContext({
+    viewport: { width: 1280, height: 800 },
+  });
   const page = await ctx.newPage();
 
   await createRoom(page, "Sizer");
@@ -57,7 +59,9 @@ test("table resizes correctly across viewports", async ({ browser }) => {
 
   // 5) Verify the community cards, betting tray and seats are still visible
   //    at the final size.
-  await expect(page.locator(".shadow-table .felt-pattern").first()).toBeVisible();
+  await expect(
+    page.locator(".shadow-table .felt-pattern").first(),
+  ).toBeVisible();
 
   await ctx.close();
 });

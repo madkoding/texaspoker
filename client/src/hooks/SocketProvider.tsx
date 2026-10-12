@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useRef, useState, useCallback, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  ReactNode,
+} from "react";
 import { ClientToServer, ServerToClient } from "../types";
 import { createLogger } from "../logger";
 
@@ -70,7 +78,9 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
       ws.onopen = () => {
         if (intentionalCloseRef.current) {
-          try { ws.close(); } catch {}
+          try {
+            ws.close();
+          } catch {}
           return;
         }
         log.info("connected");
@@ -91,7 +101,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       ws.onmessage = (e) => {
         try {
           const msg = JSON.parse(e.data) as ServerToClient;
-          log.debug("recv", { type: msg.type, roomId: msg.type === "state" ? msg.state?.roomId : undefined });
+          log.debug("recv", {
+            type: msg.type,
+            roomId: msg.type === "state" ? msg.state?.roomId : undefined,
+          });
           if (msg.type === "error" && msg.error) setLastError(msg.error);
           listenersRef.current.forEach((l) => l(msg));
         } catch (err) {
@@ -125,33 +138,50 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         ws.onclose = null;
         ws.onerror = null;
         ws.onmessage = null;
-        if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CLOSING) {
-          try { ws.close(); } catch {}
+        if (
+          ws.readyState === WebSocket.OPEN ||
+          ws.readyState === WebSocket.CLOSING
+        ) {
+          try {
+            ws.close();
+          } catch {}
         }
       }
     };
   }, []);
 
-  const send = useCallback((msg: ClientToServer) => {
-    const ws = wsRef.current;
-    const payload = JSON.stringify({ ...msg, clientId: clientId });
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      log.debug("send", { type: msg.type, action: (msg as any).action, amount: (msg as any).amount });
-      ws.send(payload);
-    } else if (ws && ws.readyState === WebSocket.CONNECTING) {
-      log.debug("send queued (connecting)", { type: msg.type });
-      ws.addEventListener(
-        "open",
-        () => {
-          try { ws.send(payload); } catch {}
-        },
-        { once: true }
-      );
-    } else {
-      log.warn("send dropped: socket not open", { type: msg.type, readyState: ws?.readyState });
-      setLastError(`No se pudo enviar: ${msg.type} (socket cerrado)`);
-    }
-  }, [clientId]);
+  const send = useCallback(
+    (msg: ClientToServer) => {
+      const ws = wsRef.current;
+      const payload = JSON.stringify({ ...msg, clientId: clientId });
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        log.debug("send", {
+          type: msg.type,
+          action: (msg as any).action,
+          amount: (msg as any).amount,
+        });
+        ws.send(payload);
+      } else if (ws && ws.readyState === WebSocket.CONNECTING) {
+        log.debug("send queued (connecting)", { type: msg.type });
+        ws.addEventListener(
+          "open",
+          () => {
+            try {
+              ws.send(payload);
+            } catch {}
+          },
+          { once: true },
+        );
+      } else {
+        log.warn("send dropped: socket not open", {
+          type: msg.type,
+          readyState: ws?.readyState,
+        });
+        setLastError(`No se pudo enviar: ${msg.type} (socket cerrado)`);
+      }
+    },
+    [clientId],
+  );
 
   const subscribe = useCallback((fn: Listener) => {
     listenersRef.current.add(fn);
@@ -161,7 +191,9 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ connected, send, subscribe, lastError, clientId }}>
+    <SocketContext.Provider
+      value={{ connected, send, subscribe, lastError, clientId }}
+    >
       {children}
     </SocketContext.Provider>
   );
@@ -169,6 +201,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
 export function useSocketContext() {
   const ctx = useContext(SocketContext);
-  if (!ctx) throw new Error("useSocketContext must be used inside SocketProvider");
+  if (!ctx)
+    throw new Error("useSocketContext must be used inside SocketProvider");
   return ctx;
 }

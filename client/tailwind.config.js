@@ -45,7 +45,8 @@ export default {
         card: "0 3px 6px rgba(0,0,0,.15)",
         lift: "0 8px 20px rgba(0,0,0,.3)",
         // Used for the floating table window to give it a "lifted" feel.
-        "table": "0 30px 80px rgba(0,0,0,0.7), 0 0 0 6px #5a3e26, 0 0 0 14px #2b1c10",
+        table:
+          "0 30px 80px rgba(0,0,0,0.7), 0 0 0 6px #5a3e26, 0 0 0 14px #2b1c10",
       },
       backgroundImage: {
         felt: "radial-gradient(ellipse at center, #0f7a51 0%, #0b5d3b 45%, #073d26 100%)",

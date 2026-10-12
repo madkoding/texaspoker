@@ -5,12 +5,20 @@
 
 type Level = "debug" | "info" | "warn" | "error";
 
-const LEVEL_RANK: Record<Level, number> = { debug: 10, info: 20, warn: 30, error: 40 };
+const LEVEL_RANK: Record<Level, number> = {
+  debug: 10,
+  info: 20,
+  warn: 30,
+  error: 40,
+};
 
 function getEnv() {
   const env = (import.meta as any).env?.VITE_LOG as string | undefined;
   if (env) return env;
-  if (typeof window !== "undefined" && window.location.search.includes("log=")) {
+  if (
+    typeof window !== "undefined" &&
+    window.location.search.includes("log=")
+  ) {
     return new URLSearchParams(window.location.search).get("log") || "";
   }
   return "";
@@ -24,12 +32,21 @@ const MAX_ENTRIES = 500;
 
 function nsEnabled(ns: string): boolean {
   if (!envFilter) return false;
-  if (envFilter === "1" || envFilter === "*" || envFilter.toLowerCase() === "true") return true;
+  if (
+    envFilter === "1" ||
+    envFilter === "*" ||
+    envFilter.toLowerCase() === "true"
+  )
+    return true;
   return envFilter
     .split(",")
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean)
-    .some((token) => ns.toLowerCase().startsWith(token) || token.startsWith(ns.toLowerCase()));
+    .some(
+      (token) =>
+        ns.toLowerCase().startsWith(token) ||
+        token.startsWith(ns.toLowerCase()),
+    );
 }
 
 function shouldLog(level: Level, ns: string): boolean {
@@ -47,13 +64,19 @@ function store(level: Level, ns: string, args: unknown[]) {
   if (typeof window === "undefined") return;
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
-    const arr: { ts: number; level: Level; ns: string; msg: string }[] = raw ? JSON.parse(raw) : [];
+    const arr: { ts: number; level: Level; ns: string; msg: string }[] = raw
+      ? JSON.parse(raw)
+      : [];
     const ts = Date.now();
     const tag = `[${new Date(ts).toISOString().slice(11, 23)} ${level.toUpperCase().padEnd(5)} ${ns}]`;
     const msg = args
       .map((a) => {
         if (typeof a === "string") return a;
-        try { return JSON.stringify(a); } catch { return String(a); }
+        try {
+          return JSON.stringify(a);
+        } catch {
+          return String(a);
+        }
       })
       .join(" ");
     arr.push({ ts, level, ns, msg: tag + " " + msg });
@@ -101,7 +124,9 @@ export function dumpLogs(): string {
 }
 
 export function clearLogs() {
-  try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
+  try {
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch {}
 }
 
 export type Logger = ReturnType<typeof createLogger>;

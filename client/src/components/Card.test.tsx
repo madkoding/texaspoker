@@ -31,14 +31,20 @@ describe("Card", () => {
   });
 
   it("respects size prop", () => {
-    const { container: sm } = render(<Card card={{ rank: "5", suit: "♦" }} size="sm" />);
+    const { container: sm } = render(
+      <Card card={{ rank: "5", suit: "♦" }} size="sm" />,
+    );
     expect(sm.firstChild).toHaveClass("w-14");
-    const { container: lg } = render(<Card card={{ rank: "5", suit: "♦" }} size="lg" />);
+    const { container: lg } = render(
+      <Card card={{ rank: "5", suit: "♦" }} size="lg" />,
+    );
     expect(lg.firstChild).toHaveClass("w-[96px]");
   });
 
   it("applies highlight class", () => {
-    const { container } = render(<Card card={{ rank: "A", suit: "♠" }} highlight />);
+    const { container } = render(
+      <Card card={{ rank: "A", suit: "♠" }} highlight />,
+    );
     expect(container.firstChild).toHaveClass("ring-2");
   });
 });

@@ -8,7 +8,9 @@ import {
 } from "./helpers";
 
 test.describe("Lobby + create + play vs bots", () => {
-  test("happy path: create room, add bots, see hand start", async ({ page }) => {
+  test("happy path: create room, add bots, see hand start", async ({
+    page,
+  }) => {
     // Use a unique clientId so we don't collide with previous runs
     await setClientId(page, `P_E2E_${Date.now()}`);
     test.setTimeout(30_000);

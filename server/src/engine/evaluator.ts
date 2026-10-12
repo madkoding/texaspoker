@@ -4,13 +4,13 @@ import { RANK_VALUE } from "./deck.js";
 const HAND_RANK: Record<HandName, number> = {
   "Escalera Real": 10,
   "Escalera de Color": 9,
-  "Póker": 8,
-  "Full": 7,
-  "Color": 6,
-  "Escalera": 5,
-  "Trío": 4,
+  Póker: 8,
+  Full: 7,
+  Color: 6,
+  Escalera: 5,
+  Trío: 4,
   "Doble Par": 3,
-  "Par": 2,
+  Par: 2,
   "Carta Alta": 1,
 };
 
@@ -76,7 +76,8 @@ export function evaluateHand(seven: Card[]): EvaluatedHand {
     counts.push({ value: v, cards });
   }
   counts.sort((a, b) => {
-    if (b.cards.length !== a.cards.length) return b.cards.length - a.cards.length;
+    if (b.cards.length !== a.cards.length)
+      return b.cards.length - a.cards.length;
     return b.value - a.value;
   });
 
@@ -135,7 +136,10 @@ export function evaluateHand(seven: Card[]): EvaluatedHand {
 
   // Flush
   if (flushSuit) {
-    const flushCards = suitMap.get(flushSuit)!.slice().sort((a, b) => RANK_VALUE[b.rank] - RANK_VALUE[a.rank]);
+    const flushCards = suitMap
+      .get(flushSuit)!
+      .slice()
+      .sort((a, b) => RANK_VALUE[b.rank] - RANK_VALUE[a.rank]);
     const top5 = flushCards.slice(0, 5);
     return {
       name: "Color",
@@ -166,7 +170,13 @@ export function evaluateHand(seven: Card[]): EvaluatedHand {
       name: "Trío",
       rank: HAND_RANK["Trío"],
       kickers: [trip.value, ...kickers],
-      cards: [...trip.cards, ...counts.filter((c) => c.cards.length === 1).slice(0, 2).map((c) => c.cards[0])],
+      cards: [
+        ...trip.cards,
+        ...counts
+          .filter((c) => c.cards.length === 1)
+          .slice(0, 2)
+          .map((c) => c.cards[0]),
+      ],
     };
   }
 
@@ -200,13 +210,18 @@ export function evaluateHand(seven: Card[]): EvaluatedHand {
       kickers: [pair.value, ...kickers],
       cards: [
         ...pair.cards,
-        ...counts.filter((c) => c.cards.length === 1).slice(0, 3).map((c) => c.cards[0]),
+        ...counts
+          .filter((c) => c.cards.length === 1)
+          .slice(0, 3)
+          .map((c) => c.cards[0]),
       ],
     };
   }
 
   // High card
-  const sorted = seven.slice().sort((a, b) => RANK_VALUE[b.rank] - RANK_VALUE[a.rank]);
+  const sorted = seven
+    .slice()
+    .sort((a, b) => RANK_VALUE[b.rank] - RANK_VALUE[a.rank]);
   return {
     name: "Carta Alta",
     rank: HAND_RANK["Carta Alta"],

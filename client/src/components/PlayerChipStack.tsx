@@ -72,7 +72,9 @@ export function PlayerChipStack({
                   <PokerChip
                     color={d.color}
                     size={size}
-                    value={i === Math.floor(visibleCount / 2) ? d.value : undefined}
+                    value={
+                      i === Math.floor(visibleCount / 2) ? d.value : undefined
+                    }
                   />
                 </div>
               ))}

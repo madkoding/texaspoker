@@ -40,7 +40,14 @@ export function TurnTimer({ duration, resetKey }: Props) {
       title={`${remaining}s para actuar`}
     >
       <svg width="22" height="22" viewBox="0 0 44 44" className="-rotate-90">
-        <circle cx="22" cy="22" r={radius} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="4" />
+        <circle
+          cx="22"
+          cy="22"
+          r={radius}
+          fill="none"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="4"
+        />
         <circle
           cx="22"
           cy="22"
@@ -53,7 +60,9 @@ export function TurnTimer({ duration, resetKey }: Props) {
           style={{ transition: "stroke-dasharray 0.5s linear" }}
         />
       </svg>
-      <span className={`tabular-nums ${isUrgent ? "text-pokerred font-bold" : "text-gold-light"}`}>
+      <span
+        className={`tabular-nums ${isUrgent ? "text-pokerred font-bold" : "text-gold-light"}`}
+      >
         {remaining}s
       </span>
     </div>

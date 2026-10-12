@@ -1,7 +1,9 @@
 import { chromium } from "@playwright/test";
 
 const browser = await chromium.launch();
-const context = await browser.newContext({ viewport: { width: 1400, height: 900 } });
+const context = await browser.newContext({
+  viewport: { width: 1400, height: 900 },
+});
 const page = await context.newPage();
 
 await page.goto("http://localhost:5173/");
